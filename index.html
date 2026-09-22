@@ -441,7 +441,7 @@
   <div class="eyebrow">Barbería</div>
   <img src="icons/logo-header.png" alt="SANTIAGO BARBER" class="brand-logo">
   <div class="sub">
-    ✨ Más que un corte, una experiencia. En Santiago Barber cuidamos cada detalle para resaltar tu mejor imagen. Reserva tu cita y eleva tu estilo al siguiente nivel.
+    ✂️ El estilo no se improvisa, se afila. En Santiago Barber cada corte se piensa antes de hacerse — línea limpia, precisión de verdad y un acabado que se nota. Agenda tu cita y sal con la imagen que quieres mostrar.
   </div>
   <div class="auth-bar" id="authBar">
     <button id="btnAuthOpen" class="auth-pill">Iniciar sesión</button>
@@ -1151,6 +1151,14 @@ function apptDateTime(a){
   return d;
 }
 
+function citasFuturasDelCliente(){
+  if(!currentUser) return [];
+  const now = new Date();
+  return CITAS
+    .filter(a => a.uid === currentUser.uid && a.status !== "cancelada" && apptDateTime(a) >= now)
+    .sort((a,b) => apptDateTime(a) - apptDateTime(b));
+}
+
 function getStatus(a){
   if(a.status === "realizada") return "realizada";
   if(apptDateTime(a) < new Date()) return "retrasada";
@@ -1336,6 +1344,15 @@ function updateButtonState(){
 btnReservar.addEventListener("click", () => {
   const dateStr = fechaInput.value;
   const minutes = selectedSlot;
+
+  const existentes = citasFuturasDelCliente();
+  if(existentes.length > 0){
+    const prox = existentes[0];
+    const servicioProx = prox.service && prox.service.name ? ` (${prox.service.name})` : "";
+    const ok = confirm(`Ya tienes una cita agendada para el ${prettyDate(prox.date)} a las ${prox.time}${servicioProx}. ¿Quieres reservar otra de todas formas?`);
+    if(!ok) return;
+  }
+
   const citaId = `${dateStr}_${minutes}`;
 
   const cita = {

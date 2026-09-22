@@ -1,0 +1,2007 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>SANTIAGO BARBER · Reservas</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0e0c0a">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SANTIAGO BARBER">
+
+<!-- Vista previa al compartir el link (WhatsApp, Facebook, etc.) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SANTIAGO BARBER">
+<meta property="og:title" content="SANTIAGO BARBER · Reservas">
+<meta property="og:description" content="Reserva tu cita en línea. Precisión y estilo en cada corte — Santiago Barber.">
+<meta property="og:image" content="icons/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SANTIAGO BARBER · Reservas">
+<meta name="twitter:description" content="Reserva tu cita en línea. Precisión y estilo en cada corte — Santiago Barber.">
+<meta name="twitter:image" content="icons/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0e0c0a;
+    --panel:#1c1712;
+    --panel-2:#26201a;
+    --line:#4d4438;
+    --brass:#c6c9cd;
+    --brass-bright:#f2f4f6;
+    --cream:#f2efe8;
+    --cream-dim:#b8b2a6;
+    --red:#9c2b3a;
+    --red-bright:#c23c4f;
+    --green:#6fae74;
+    --telegram:#229ED9;
+    --telegram-bright:#3bb8ec;
+    font-size:16px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    position:relative;
+    background:
+      radial-gradient(circle at 20% 0%, rgba(198,201,205,0.10), transparent 45%),
+      var(--ink);
+    color:var(--cream);
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    min-height:100vh;
+    padding-bottom:30px;
+  }
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:url('icons/icon-512.png');
+    background-repeat:no-repeat;
+    background-position:center 62%;
+    background-size:min(620px, 110vw) min(620px, 110vw);
+    opacity:0.08;
+    filter:contrast(1.1);
+    pointer-events:none;
+    z-index:0;
+  }
+  header.top, .pole, main{ position:relative; z-index:1; }
+  h1,h2,h3,.display{font-family:'Bebas Neue',system-ui,sans-serif; letter-spacing:0.04em;}
+
+  .pole{
+    height:6px;
+    background:repeating-linear-gradient(115deg, var(--red) 0 14px, var(--cream) 14px 22px, var(--brass) 22px 36px);
+    background-size:200% 100%;
+  }
+
+  header.top{
+    padding:26px 20px 20px;
+    text-align:center;
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg, rgba(198,201,205,0.05), transparent);
+    position:relative;
+  }
+  .barber-access{
+    position:absolute; top:14px; right:14px;
+    width:30px; height:30px; border-radius:50%;
+    background:rgba(0,0,0,0.25); border:1px solid var(--line);
+    color:var(--cream-dim); font-size:13px; opacity:0.7; cursor:pointer;
+    display:none; align-items:center; justify-content:center;
+  }
+  .barber-access:active{opacity:0.9;}
+  .back-to-client{
+    display:inline-block; font-size:12px; color:var(--cream-dim);
+    margin-bottom:14px; cursor:pointer; text-decoration:underline;
+  }
+  header.top .eyebrow{
+    font-size:11px; letter-spacing:0.32em; text-transform:uppercase;
+    color:var(--brass); font-weight:600;
+  }
+  .brand-logo{
+    display:block; width:min(320px, 82%); max-width:320px; height:auto;
+    margin:8px auto 6px; border-radius:10px;
+  }
+  header.top .sub{
+    color:var(--cream-dim); font-size:13px; letter-spacing:0.02em;
+    max-width:340px; margin:0 auto; line-height:1.5;
+  }
+
+  .auth-bar{margin-top:14px; display:flex; justify-content:center; align-items:center; gap:10px;}
+  .auth-pill{
+    background:var(--cream); color:var(--ink); border:none; border-radius:30px;
+    padding:8px 18px; font-family:'Inter'; font-weight:700; font-size:12px; cursor:pointer;
+  }
+  .auth-pill-ghost{
+    background:transparent; color:var(--cream-dim); border:1px solid var(--line);
+  }
+  .auth-hello{font-size:12px; color:var(--brass-bright); font-weight:600;}
+  .install-btn{
+    display:block; margin:12px auto 0; padding:9px 16px; border-radius:20px;
+    background:var(--brass); color:#20160a; border:none; font-family:'Inter';
+    font-weight:700; font-size:12px; cursor:pointer;
+  }
+  .ios-hint{
+    margin:12px auto 0; padding:9px 14px; border-radius:12px; max-width:280px;
+    background:var(--panel-2); border:1px solid var(--line); color:var(--cream-dim);
+    font-size:11px; text-align:center; line-height:1.5;
+  }
+  .ios-hint b{color:var(--brass-bright);}
+
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:50;
+    display:flex; align-items:center; justify-content:center; padding:20px;
+  }
+  .modal-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:16px;
+    padding:22px; width:100%; max-width:380px; max-height:90vh; overflow-y:auto;
+  }
+  .modal-head{display:flex; justify-content:space-between; align-items:center;}
+  .modal-head h2{margin:0; font-size:26px; color:var(--brass-bright);}
+  .modal-x{
+    background:var(--panel-2); border:1px solid var(--line); color:var(--cream);
+    width:30px; height:30px; border-radius:50%; cursor:pointer; font-size:14px;
+  }
+  .auth-error{font-size:12px; color:#e7b7ac; margin-top:6px; min-height:14px;}
+  .auth-switch{
+    text-align:center; font-size:13px; color:var(--cream-dim); margin-top:14px; cursor:pointer;
+  }
+  .auth-switch b{color:var(--brass-bright);}
+  .auth-forgot{
+    text-align:center; font-size:12px; color:var(--cream-dim); margin-top:10px;
+    text-decoration:underline; cursor:pointer;
+  }
+  .card.locked{
+    opacity:0.42; pointer-events:none; filter:grayscale(0.35);
+  }
+
+  main{max-width:520px; margin:0 auto; padding:20px 16px 10px;}
+  section{display:none;}
+  section.active{display:block; animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:18px;
+    margin-bottom:16px;
+  }
+  .card h2{
+    font-size:26px; margin:0 0 12px; color:var(--brass-bright);
+    display:flex; align-items:center; gap:8px;
+  }
+  .card h2 .tag{
+    font-family:'Inter'; font-size:10px; letter-spacing:0.14em; text-transform:uppercase;
+    background:var(--panel-2); border:1px solid var(--line); color:var(--cream-dim);
+    padding:3px 8px; border-radius:20px; margin-left:auto; font-weight:600;
+  }
+  label{
+    display:block; font-size:12px; text-transform:uppercase; letter-spacing:0.1em;
+    color:var(--brass); font-weight:700; margin:14px 0 6px;
+  }
+  label:first-of-type{margin-top:0;}
+  input[type=date], input[type=text], input[type=tel], input[type=password], select{
+    width:100%; padding:13px 14px; border-radius:10px;
+    border:1px solid var(--line); background:var(--panel-2); color:var(--cream);
+    font-size:16px; font-family:'Inter'; outline:none;
+  }
+  input:focus{border-color:var(--brass);}
+  input:disabled{opacity:0.5;}
+  ::placeholder{color:#6f6357;}
+
+  .day-note{
+    margin-top:10px; font-size:13px; color:var(--cream-dim);
+    background:var(--panel-2); border:1px dashed var(--line); border-radius:10px; padding:10px 12px;
+  }
+  .closed-msg{
+    margin-top:12px; padding:16px; border-radius:10px;
+    background:rgba(163,70,56,0.12); border:1px solid rgba(163,70,56,0.5);
+    color:#e7b7ac; font-size:14px; text-align:center; font-weight:600;
+  }
+
+  .services-wrap{margin-bottom:4px;}
+  .service-option{
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+    background:var(--panel-2); border:1px solid var(--line); border-radius:10px;
+    padding:13px 14px; margin-bottom:8px; cursor:pointer; transition:border-color .1s ease;
+  }
+  .service-option:active{transform:scale(0.99);}
+  .service-option.selected{border-color:var(--brass); background:rgba(242,244,246,0.06);}
+  .service-option .name{font-weight:700; font-size:14px; color:var(--cream);}
+  .service-option .price{font-family:'Bebas Neue'; font-size:19px; color:var(--brass-bright); letter-spacing:0.02em;}
+
+  .slots{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:10px;}
+  .slot{
+    padding:12px 6px; border-radius:10px; border:1px solid var(--line);
+    background:var(--panel-2); color:var(--cream); font-family:'Inter'; font-weight:600; font-size:14px;
+    cursor:pointer; text-align:center; transition:transform .1s ease;
+  }
+  .slot:active{transform:scale(0.96);}
+  .slot.selected{background:var(--brass); border-color:var(--brass); color:#20160a;}
+  .slot.taken{background:transparent; color:#584d43; border-style:dashed; text-decoration:line-through; cursor:not-allowed;}
+  .slot.past{opacity:0.45; text-decoration:underline; border-style:dotted; cursor:not-allowed;}
+
+  button.primary{
+    width:100%; padding:15px; margin-top:16px; border:none; border-radius:10px;
+    background:linear-gradient(180deg, var(--brass-bright), var(--brass));
+    color:#161514; font-weight:800; font-size:15px; letter-spacing:0.02em;
+    cursor:pointer;
+  }
+  button.primary:disabled{opacity:0.4; cursor:not-allowed;}
+  button.secondary{
+    width:100%; padding:13px; margin-top:10px; border-radius:10px;
+    background:transparent; border:1px solid var(--line); color:var(--cream-dim);
+    font-weight:600; font-size:14px; cursor:pointer;
+  }
+  button.danger{
+    padding:8px 12px; border-radius:8px; border:1px solid rgba(163,70,56,0.5);
+    background:rgba(163,70,56,0.12); color:#e7b7ac; font-weight:700; font-size:12px; cursor:pointer;
+  }
+  .whatsapp-btn{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    width:100%; padding:14px; margin-top:16px; border-radius:10px;
+    background:#25D366; color:#fff; font-weight:800; font-size:15px;
+    text-decoration:none; box-sizing:border-box; border:none; cursor:pointer;
+  }
+  .whatsapp-btn:active{opacity:0.9;}
+  .whatsapp-btn svg{flex-shrink:0;}
+
+  .telegram-btn{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    width:100%; padding:14px; margin-top:12px; border-radius:10px;
+    background:var(--telegram); color:#fff; font-weight:800; font-size:15px;
+    text-decoration:none; box-sizing:border-box; border:none; cursor:pointer;
+  }
+  .telegram-btn:active{opacity:0.9;}
+  .telegram-btn svg{flex-shrink:0;}
+  .telegram-ok{
+    display:flex; align-items:center; gap:8px; margin-top:14px; padding:12px 14px;
+    background:rgba(34,158,217,0.12); border:1px solid rgba(34,158,217,0.4);
+    border-radius:10px; font-size:13px; color:#9fd8f2; font-weight:600;
+  }
+
+  .confirm{
+    text-align:center; padding:10px 4px 4px;
+  }
+  .confirm .check{
+    width:52px; height:52px; border-radius:50%; background:var(--green);
+    display:flex; align-items:center; justify-content:center; margin:0 auto 12px;
+    font-size:26px; color:#0e1a0d;
+  }
+  .confirm .row{
+    display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px solid var(--line);
+    font-size:14px;
+  }
+  .confirm .row:last-child{border-bottom:none;}
+  .confirm .row span:first-child{color:var(--cream-dim);}
+  .confirm .row span:last-child{font-weight:700; text-align:right;}
+
+  .stats{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px;}
+  .stat{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:14px 6px; text-align:center;
+  }
+  .stat .n{font-family:'Bebas Neue'; font-size:28px; color:var(--brass-bright); line-height:1;}
+  .stat .l{font-size:10px; color:var(--cream-dim); text-transform:uppercase; letter-spacing:0.08em; margin-top:4px;}
+
+  .appt-item{
+    background:var(--panel-2); border:1px solid var(--line); border-radius:10px;
+    padding:12px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:10px;
+    flex-wrap:wrap;
+  }
+  .appt-item .info b{display:block; font-size:14px; color:var(--cream);}
+  .appt-item .info span{font-size:12px; color:var(--cream-dim);}
+  .appt-item .right{display:flex; flex-direction:column; align-items:flex-end; gap:6px;}
+  .appt-item .when{font-size:12px; color:var(--brass); font-weight:700; white-space:nowrap; text-align:right;}
+  .badge{
+    font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em;
+    padding:3px 9px; border-radius:20px; white-space:nowrap;
+  }
+  .badge.pendiente{background:rgba(198,201,205,0.16); color:var(--brass-bright); border:1px solid rgba(198,201,205,0.4);}
+  .badge.realizada{background:rgba(95,143,91,0.16); color:#9fce9a; border:1px solid rgba(95,143,91,0.4);}
+  .badge.retrasada{background:rgba(163,70,56,0.18); color:#e79c86; border:1px solid rgba(163,70,56,0.55);}
+  select.badge-select{
+    -webkit-appearance:none; appearance:none; font-family:'Inter'; cursor:pointer;
+    padding-right:22px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%23e3e5e7'/></svg>");
+    background-repeat:no-repeat; background-position:right 8px center;
+  }
+  .group-title{
+    font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:var(--brass);
+    font-weight:700; margin:16px 0 8px;
+  }
+  .group-title:first-child{margin-top:0;}
+  .empty{
+    text-align:center; color:var(--cream-dim); font-size:13px; padding:20px 10px;
+  }
+
+  .blocked-item{
+    display:flex; justify-content:space-between; align-items:center;
+    background:var(--panel-2); border:1px solid var(--line); border-radius:10px;
+    padding:10px 12px; margin-bottom:8px;
+  }
+  .blocked-item .d{font-size:13px; font-weight:700;}
+  .blocked-item .m{font-size:11px; color:var(--cream-dim);}
+
+  .avail-summary{display:flex; gap:10px; margin-top:12px;}
+  .avail-summary div{
+    flex:1; text-align:center; background:var(--panel-2); border:1px solid var(--line);
+    border-radius:10px; padding:10px 4px;
+  }
+  .avail-summary .n{font-family:'Bebas Neue'; font-size:22px; color:var(--brass-bright);}
+  .avail-summary .l{font-size:10px; color:var(--cream-dim); text-transform:uppercase;}
+
+  .small-note{font-size:11px; color:var(--cream-dim); margin-top:8px; line-height:1.5;}
+
+  .sync-row{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:14px; font-size:11px; color:var(--cream-dim);
+  }
+  .sync-row button{
+    background:none; border:1px solid var(--line); color:var(--brass-bright);
+    padding:6px 12px; border-radius:20px; font-size:11px; font-weight:700; cursor:pointer;
+  }
+  .sync-dot{width:7px; height:7px; border-radius:50%; background:var(--green); display:inline-block; margin-right:6px;}
+  .sync-dot.loading{background:var(--brass); animation:pulse 1s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;} 50%{opacity:0.3;}}
+
+  /* ===== Redes sociales ===== */
+  .social-row{
+    display:flex; justify-content:center; gap:12px; margin-top:14px;
+  }
+  .social-btn{
+    width:38px; height:38px; border-radius:50%; display:flex; align-items:center;
+    justify-content:center; background:var(--panel-2); border:1px solid var(--line);
+    color:var(--cream); text-decoration:none; transition:transform .1s ease;
+  }
+  .social-btn:active{transform:scale(0.92);}
+  .social-btn svg{width:18px; height:18px;}
+
+  /* ===== Galería de fotos ===== */
+  .gallery-scroll{
+    display:flex; gap:14px; overflow-x:auto; padding-bottom:4px;
+    -webkit-overflow-scrolling:touch; scroll-snap-type:x mandatory;
+  }
+  .gallery-scroll::-webkit-scrollbar{height:5px;}
+  .gallery-scroll::-webkit-scrollbar-thumb{background:var(--line); border-radius:10px;}
+  .gallery-page{
+    display:grid; grid-template-columns:repeat(3, 1fr); grid-template-rows:repeat(2, 1fr);
+    gap:6px; flex-shrink:0; width:100%; height:220px; scroll-snap-align:start;
+  }
+  .gallery-page img{
+    width:100%; height:100%; object-fit:cover; border-radius:10px;
+    border:1px solid var(--line); cursor:pointer; background:var(--panel-2);
+    display:block;
+  }
+  .gallery-empty{
+    font-size:12px; color:var(--cream-dim); text-align:center; padding:14px 6px;
+  }
+
+  /* ===== Servicios y precios ===== */
+  .price-row{
+    display:flex; gap:12px; align-items:center;
+    background:var(--panel-2); border:1px solid var(--line); border-radius:12px;
+    padding:12px 14px; margin-bottom:10px;
+  }
+  .price-icon{
+    width:38px; height:38px; border-radius:50%; background:var(--ink);
+    border:1px solid var(--line); display:flex; align-items:center; justify-content:center;
+    font-size:17px; flex-shrink:0;
+  }
+  .price-info{flex:1; min-width:0;}
+  .price-title{
+    font-family:'Bebas Neue'; font-size:14px; letter-spacing:0.03em; color:var(--cream);
+    line-height:1.15;
+  }
+  .price-amount{
+    font-family:'Bebas Neue'; font-size:24px; color:var(--brass-bright); line-height:1.1; margin-top:2px;
+  }
+  .price-desc{font-size:11.5px; color:var(--cream-dim); margin-top:2px; line-height:1.3;}
+  .precios-fotos{
+    display:flex; gap:8px; margin-bottom:14px;
+  }
+  .precios-fotos img{
+    flex:1; width:50%; height:150px; object-fit:cover; border-radius:12px;
+    border:1px solid var(--line); background:var(--panel-2);
+  }
+  .lightbox-overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:60;
+    display:flex; align-items:center; justify-content:center; padding:20px;
+  }
+  .lightbox-overlay img{
+    max-width:100%; max-height:85vh; border-radius:10px; border:1px solid var(--line);
+  }
+  .lightbox-close{
+    position:absolute; top:18px; right:18px; width:36px; height:36px; border-radius:50%;
+    background:var(--panel); border:1px solid var(--line); color:var(--cream);
+    font-size:16px; cursor:pointer;
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <button id="navBarbero" class="barber-access" title="Panel del barbero">
+    <svg viewBox="0 0 120 56" width="17" height="auto" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <mask id="bladeHoles">
+        <rect x="0" y="0" width="120" height="56" fill="#fff"/>
+        <ellipse cx="34" cy="28" rx="13" ry="9" fill="#000"/>
+        <circle cx="60" cy="28" r="7" fill="#000"/>
+        <ellipse cx="86" cy="28" rx="13" ry="9" fill="#000"/>
+      </mask>
+      <path
+        d="M10,0 L110,0 L110,9 L120,9 L120,19 L110,19 L110,37 L120,37 L120,47 L110,47 L110,56 L10,56 L10,47 L0,47 L0,37 L10,37 L10,19 L0,19 L0,9 L10,9 Z"
+        fill="currentColor" mask="url(#bladeHoles)"/>
+    </svg>
+  </button>
+  <div class="eyebrow">Barbería</div>
+  <img src="icons/logo-header.png" alt="SANTIAGO BARBER" class="brand-logo">
+  <div class="sub">
+    ✨ Más que un corte, una experiencia. En Santiago Barber cuidamos cada detalle para resaltar tu mejor imagen. Reserva tu cita y eleva tu estilo al siguiente nivel.
+  </div>
+  <div class="auth-bar" id="authBar">
+    <button id="btnAuthOpen" class="auth-pill">Iniciar sesión</button>
+  </div>
+  <button id="btnInstalarApp" class="install-btn" style="display:none;">📲 Descargar app · Guárdala en tu celular</button>
+  <div id="iosInstallHint" class="ios-hint" style="display:none;">📲 Para instalarla: toca <b>Compartir</b> y elige <b>Añadir a pantalla de inicio</b></div>
+</header>
+<div class="pole"></div>
+
+<div id="authModal" class="modal-overlay" style="display:none;">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h2 id="authTitle">Iniciar sesión</h2>
+      <button id="authClose" class="modal-x">✕</button>
+    </div>
+    <div class="small-note" id="authSubtitle">Accede a tu cuenta para agendar más rápido</div>
+    <div class="auth-error" id="authError"></div>
+
+    <div id="authLoginFields">
+      <label for="authEmail">Correo electrónico</label>
+      <input type="text" id="authEmail" placeholder="tu@correo.com" autocomplete="email">
+      <label for="authPass">Contraseña</label>
+      <input type="password" id="authPass" placeholder="••••••••" autocomplete="current-password">
+    </div>
+
+    <div id="authRegisterFields" style="display:none;">
+      <label for="regNombre">Tu nombre</label>
+      <input type="text" id="regNombre" placeholder="Ej: Juan Pérez" autocomplete="name">
+      <label for="regCelular">Tu celular</label>
+      <input type="tel" id="regCelular" placeholder="Ej: 300 123 4567" autocomplete="tel">
+      <label for="regEmail">Correo electrónico</label>
+      <input type="text" id="regEmail" placeholder="tu@correo.com" autocomplete="email">
+      <label for="regPass">Contraseña</label>
+      <input type="password" id="regPass" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+    </div>
+
+    <button class="primary" id="authSubmit">Iniciar sesión</button>
+    <div class="auth-switch" id="authSwitchToRegister">¿No tienes cuenta? <b>Crear cuenta gratis</b></div>
+    <div class="auth-switch" id="authSwitchToLogin" style="display:none;">¿Ya tienes cuenta? <b>Inicia sesión</b></div>
+    <div class="auth-forgot" id="authForgot">¿Olvidaste tu contraseña?</div>
+  </div>
+</div>
+
+<main>
+
+  <!-- ================= CLIENTE ================= -->
+  <section id="tab-cliente" class="active">
+
+    <div class="card" id="authGateCard">
+      <h2>Inicia sesión para reservar</h2>
+      <div class="small-note">Accede a tu cuenta o crea una gratis para agendar tu cita.</div>
+      <button class="primary" id="btnAuthGateOpen">Iniciar sesión</button>
+      <button class="secondary" id="btnAuthGateRegister">Crear cuenta gratis</button>
+    </div>
+
+    <div class="card locked" id="reservaCard">
+      <h2>Reservar cita <span class="tag">Cliente</span></h2>
+
+      <label>Elige el servicio</label>
+      <div id="serviciosWrap" class="services-wrap"></div>
+
+      <div id="fechaSection" style="display:none;">
+        <label for="fecha">Elige el día</label>
+        <input type="date" id="fecha" autocomplete="off" disabled>
+        <div id="diaInfo" class="day-note" style="display:none;"></div>
+        <div id="cerradoMsg" class="closed-msg" style="display:none;"></div>
+
+        <div id="slotsWrap" style="display:none;">
+          <label style="margin-top:18px;">Elige la hora</label>
+          <div id="slots" class="slots"></div>
+        </div>
+
+        <div id="formWrap" style="display:none;">
+          <label for="nombre">Tu nombre</label>
+          <input type="text" id="nombre" placeholder="Ej: Juan Pérez" autocomplete="off">
+          <label for="celular">Tu celular</label>
+          <input type="tel" id="celular" placeholder="Ej: 300 123 4567" autocomplete="off">
+          <button class="primary" id="btnReservar" disabled>Confirmar cita</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="confirmCard" style="display:none;">
+      <h2>¡Cita registrada!</h2>
+      <div class="confirm">
+        <div class="check">✓</div>
+        <div class="row"><span>Barbería</span><span>SANTIAGO BARBER</span></div>
+        <div class="row"><span>Cliente</span><span id="cNombre"></span></div>
+        <div class="row"><span>Celular</span><span id="cCelular"></span></div>
+        <div class="row"><span>Servicio</span><span id="cServicio"></span></div>
+        <div class="row"><span>Día</span><span id="cFecha"></span></div>
+        <div class="row"><span>Hora</span><span id="cHora"></span></div>
+      </div>
+      <div class="day-note" style="margin-top:14px;">Te vamos a confirmar y recordar tu cita por Telegram. Si no lo activas, de todas formas te llega un correo de confirmación.</div>
+      <div id="telegramWrap"></div>
+      <button class="secondary" id="btnNueva">Reservar otra cita</button>
+    </div>
+
+    <div class="card" id="galeriaCard">
+      <h2>Estilos que inspiran</h2>
+      <div id="galeriaScroll" class="gallery-scroll"></div>
+      <div class="social-row" id="socialRow"></div>
+    </div>
+
+    <div class="card" id="preciosCard">
+      <h2>Otros servicios</h2>
+      <div class="small-note" style="margin-top:0;">Estos servicios se agendan directo por WhatsApp.</div>
+
+      <div class="precios-fotos">
+        <img src="fotos/foto1.jpg" alt="Corte en Santiago Barber" loading="lazy" onerror="this.remove()">
+        <img src="fotos/foto2.jpg" alt="Corte en Santiago Barber" loading="lazy" onerror="this.remove()">
+      </div>
+
+      <div class="price-row">
+        <div class="price-icon">💆</div>
+        <div class="price-info">
+          <div class="price-title">MASCARILLA</div>
+          <div class="price-amount">$15.000</div>
+        </div>
+      </div>
+
+      <div class="price-row">
+        <div class="price-icon">🪒</div>
+        <div class="price-info">
+          <div class="price-title">BARBA</div>
+          <div class="price-amount">$15.000</div>
+        </div>
+      </div>
+
+      <div class="price-row">
+        <div class="price-icon">✏️</div>
+        <div class="price-info">
+          <div class="price-title">CEJAS</div>
+          <div class="price-amount">$6.000</div>
+        </div>
+      </div>
+
+      <a class="whatsapp-btn" id="btnPreciosWhatsapp" target="_blank">
+        <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true">
+          <path fill="#fff" d="M16 3C9.096 3 3.5 8.596 3.5 15.5c0 2.38.664 4.61 1.816 6.51L3 29l7.16-2.276A12.44 12.44 0 0 0 16 28c6.904 0 12.5-5.596 12.5-12.5S22.904 3 16 3zm0 22.727a10.19 10.19 0 0 1-5.19-1.42l-.372-.222-4.25 1.352 1.375-4.144-.242-.386A10.19 10.19 0 0 1 5.773 15.5C5.773 9.845 10.345 5.273 16 5.273S26.227 9.845 26.227 15.5 21.655 25.727 16 25.727z"/>
+          <path fill="#fff" d="M21.62 18.11c-.306-.153-1.81-.893-2.09-.995-.28-.102-.484-.153-.688.154-.204.306-.79.994-.968 1.199-.178.204-.357.23-.663.077-.306-.153-1.293-.477-2.464-1.52-.911-.812-1.526-1.815-1.705-2.121-.178-.306-.019-.472.134-.624.138-.138.306-.357.459-.536.153-.178.204-.306.306-.51.102-.204.051-.383-.026-.536-.077-.153-.688-1.658-.943-2.27-.248-.596-.5-.515-.688-.525-.178-.008-.382-.01-.586-.01-.204 0-.535.077-.816.383-.28.306-1.07 1.046-1.07 2.55 0 1.505 1.096 2.96 1.249 3.164.153.204 2.158 3.295 5.229 4.622.73.315 1.3.503 1.744.644.733.233 1.4.2 1.928.121.588-.088 1.81-.74 2.065-1.454.255-.714.255-1.327.178-1.454-.076-.128-.28-.204-.586-.357z"/>
+        </svg>
+        <span>Agenda por WhatsApp</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ================= BARBERO ================= -->
+  <section id="tab-barbero">
+
+    <div class="back-to-client" id="volverAReservas">← Volver a reservas</div>
+
+    <div id="panelBarbero">
+
+      <div class="sync-row">
+        <span><span class="sync-dot" id="syncDot"></span><span id="syncText">Al día</span></span>
+        <button id="btnRefrescar">Actualizar ahora</button>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><div class="n" id="statTotal">0</div><div class="l">Citas totales</div></div>
+        <div class="stat"><div class="n" id="statHoy">0</div><div class="l">Hoy</div></div>
+        <div class="stat"><div class="n" id="statProx">0</div><div class="l">Próxima cita</div></div>
+      </div>
+
+      <div class="card">
+        <h2>Resumen de citas <span class="tag">Barbero</span></h2>
+        <label for="filtroFechaCitas">Ver las citas de este día</label>
+        <input type="date" id="filtroFechaCitas">
+        <button class="secondary" id="btnVerTodasCitas" style="margin-bottom:10px;">Ver todas (sin filtro)</button>
+        <div id="listaCitas"></div>
+      </div>
+
+      <div class="card">
+        <h2>Horarios disponibles</h2>
+        <label for="fechaConsulta">Consultar disponibilidad de un día</label>
+        <input type="date" id="fechaConsulta">
+        <div class="avail-summary" id="availSummary" style="display:none;">
+          <div><div class="n" id="availTotal">0</div><div class="l">Horarios</div></div>
+          <div><div class="n" id="availOcup">0</div><div class="l">Ocupados</div></div>
+          <div><div class="n" id="availLibre">0</div><div class="l">Libres</div></div>
+        </div>
+        <div id="availClosed" class="closed-msg" style="display:none; margin-top:12px;"></div>
+      </div>
+
+      <div class="card">
+        <h2>Bloqueo de días</h2>
+        <div class="small-note">Bloquea un día de descanso: el cliente lo verá cerrado y no podrá reservar.</div>
+        <label for="bloqueoFecha">Fecha a bloquear</label>
+        <input type="date" id="bloqueoFecha">
+        <label for="bloqueoMotivo">Motivo (opcional)</label>
+        <input type="text" id="bloqueoMotivo" placeholder="Ej: Día de descanso">
+        <button class="primary" id="btnBloquear">Bloquear día</button>
+        <div id="listaBloqueos" style="margin-top:16px;"></div>
+      </div>
+
+      <div class="card">
+        <h2>Martes especiales</h2>
+        <div class="small-note">Los martes están cerrados por defecto. Si necesitas abrir un martes puntual (mismo horario que lunes/miércoles), agrégalo aquí.</div>
+        <label for="martesFecha">Fecha (debe ser un martes)</label>
+        <input type="date" id="martesFecha">
+        <button class="primary" id="btnAbrirMartes">Abrir este martes</button>
+        <div id="listaMartes" style="margin-top:16px;"></div>
+      </div>
+
+      <div class="card">
+        <h2>Bloqueo de horas</h2>
+        <div class="small-note">Para eventualidades: bloquea una sola hora puntual sin cerrar todo el día.</div>
+        <label for="bloqueoHoraFecha">Fecha</label>
+        <input type="date" id="bloqueoHoraFecha">
+        <label for="bloqueoHoraSelect">Hora a bloquear</label>
+        <select id="bloqueoHoraSelect"><option value="">Elige una fecha primero</option></select>
+        <label for="bloqueoHoraMotivo">Motivo (opcional)</label>
+        <input type="text" id="bloqueoHoraMotivo" placeholder="Ej: Cita médica">
+        <button class="primary" id="btnBloquearHora">Bloquear hora</button>
+        <div id="listaHorasBloqueadas" style="margin-top:16px;"></div>
+      </div>
+
+      <div class="card">
+        <h2>Buscar histórico</h2>
+        <div class="small-note">Filtra una fecha para ver a quiénes atendiste ese día y a qué hora, o si el día estuvo bloqueado.</div>
+        <label for="historialFecha">Fecha a consultar</label>
+        <input type="date" id="historialFecha">
+        <div id="historialResultado" style="margin-top:14px;"></div>
+      </div>
+
+      <button class="secondary" id="btnSalirPanel">Cerrar sesión</button>
+    </div>
+  </section>
+
+</main>
+
+<div id="lightboxOverlay" class="lightbox-overlay" style="display:none;">
+  <button class="lightbox-close" id="lightboxClose">✕</button>
+  <img id="lightboxImg" src="" alt="Foto de Santiago Barber">
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  onAuthStateChanged, signOut, sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore, doc, setDoc, getDoc, collection, onSnapshot,
+  runTransaction, updateDoc, deleteDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* =========================================================
+   CONFIGURACIÓN
+   ========================================================= */
+// PEGA AQUÍ el link de tu Apps Script que termina en /exec
+// (Extensiones > Apps Script > Implementar > Gestionar implementaciones > Copiar)
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxKITP0Bcis1YgjwZfSyO7-zWqwoC7LfRiNihEiL_iQl9SmP_CLQPk6EUgC34PXQ-7i/exec";
+
+// Tu número de WhatsApp con indicativo de país, sin espacios ni el signo +.
+const BARBER_WHATSAPP = "573025704721";
+
+// Usuario de tu bot de Telegram (SIN la @), ej: "SantiagoBarberBot"
+const TELEGRAM_BOT_USERNAME = "PEGA_AQUI_TU_USUARIO_DE_BOT";
+
+// El correo con el que TÚ (el barbero) inicias sesión en la app.
+// Con este correo, y solo con este, se desbloquea el panel del barbero
+// (ya no hay PIN: es el login de Firebase el que decide el acceso).
+const BARBER_EMAIL = "santiag.barber@gmail.com";
+const STEP = 40; // minutos entre citas
+
+// ---- SERVICIOS QUE SE AGENDAN EN LÍNEA ----
+// El cliente elige uno de estos ANTES de escoger fecha y hora.
+const SERVICIOS = [
+  { id: "corte", name: "Corte general", price: 28000 },
+  { id: "corte_barba", name: "Corte con barba", price: 38000 },
+  { id: "vikingo", name: "Combo vikingo", price: 50000 }
+];
+
+// ---- GALERÍA DE FOTOS ----
+// Sube tus fotos a la carpeta "fotos" del repositorio de GitHub con estos
+// nombres EXACTOS y en orden: foto1.jpg, foto2.jpg, foto3.jpg... sin
+// saltarte números. Si una foto no existe todavía, simplemente no se
+// muestra: no rompe nada.
+const CANTIDAD_FOTOS = 10;
+const GALERIA_FOTOS = Array.from({length: CANTIDAD_FOTOS}, (_, i) => `fotos/foto${i + 1}.jpg`);
+
+// ---- REDES SOCIALES ----
+const SOCIAL_LINKS = {
+  facebook: "https://www.facebook.com/share/1MNjutj4vf/?mibextid=wwXIfr",
+  instagram: "https://www.instagram.com/santibarber01?stkn=MTI3MTkzeXF2bWkx",
+  tiktok: "https://www.tiktok.com/@santiagobarberdj?_r=1&_t=ZS-99vlHtB6ao8"
+};
+
+// Configuración de tu proyecto de Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyBRMGANHuEH92wC0Z2Ti-ZpHD-TqMi3vyU",
+  authDomain: "santiago-barber-833b1.firebaseapp.com",
+  projectId: "santiago-barber-833b1",
+  storageBucket: "santiago-barber-833b1.firebasestorage.app",
+  messagingSenderId: "151269053491",
+  appId: "1:151269053491:web:192f2a207660ea82c63f46"
+};
+const fbApp = initializeApp(firebaseConfig);
+const auth = getAuth(fbApp);
+const db = getFirestore(fbApp);
+
+const SCHEDULE = {
+  // Lunes: 8:40am - 1:00pm (última antes de almuerzo), receso hasta 2:00pm, tarde 2:00pm - 7:20pm
+  1: {blocks: [{start: 8*60+40, end: 13*60}, {start: 14*60, end: 19*60+20}]},
+  // Martes: cerrado por defecto (ver MARTES_ESPECIALES más abajo). A propósito no tiene entrada aquí.
+  // Miércoles: igual que el lunes
+  3: {blocks: [{start: 8*60+40, end: 13*60}, {start: 14*60, end: 19*60+20}]},
+  // Jueves: 10:20am - 1:20pm, receso hasta 2:20pm, tarde 2:20pm - 8:20pm
+  4: {blocks: [{start: 10*60+20, end: 13*60+20}, {start: 14*60+20, end: 20*60+20}]},
+  // Viernes: igual que el lunes
+  5: {blocks: [{start: 8*60+40, end: 13*60}, {start: 14*60, end: 19*60+20}]},
+  // Sábado: 11:00am - 1:00pm, receso hasta 2:00pm, tarde 2:00pm - 8:00pm
+  6: {blocks: [{start: 11*60, end: 13*60}, {start: 14*60, end: 20*60}]},
+  // Domingo: 10:00am - 1:20pm, receso hasta 2:20pm, tarde 2:20pm - 6:20pm
+  0: {blocks: [{start: 10*60, end: 13*60+20}, {start: 14*60+20, end: 18*60+20}]},
+};
+// Horario que se usa cuando se abre un "martes especial" (mismo que lunes/miércoles)
+const MARTES_SCHEDULE_EXCEPCION = SCHEDULE[1];
+
+const DIAS = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+const MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+const DIAS_ABREV = ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
+const MESES_ABREV = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+
+/* =========================================================
+   SESIÓN DE CLIENTE (Firebase Authentication + Firestore)
+   ========================================================= */
+let currentUser = null;
+let currentProfile = null; // {name, phone, email, telegramChatId?}
+
+const authBar = document.getElementById("authBar");
+const authModal = document.getElementById("authModal");
+const authClose = document.getElementById("authClose");
+const authTitle = document.getElementById("authTitle");
+const authSubtitle = document.getElementById("authSubtitle");
+const authError = document.getElementById("authError");
+const authLoginFields = document.getElementById("authLoginFields");
+const authRegisterFields = document.getElementById("authRegisterFields");
+const authSubmit = document.getElementById("authSubmit");
+const authSwitchToRegister = document.getElementById("authSwitchToRegister");
+const authSwitchToLogin = document.getElementById("authSwitchToLogin");
+const authForgot = document.getElementById("authForgot");
+
+let authMode = "login";
+
+function openAuthModal(mode){
+  authMode = mode || "login";
+  authError.textContent = "";
+  authError.style.color = "#e7b7ac";
+  if(authMode === "login"){
+    authTitle.textContent = "Iniciar sesión";
+    authSubtitle.textContent = "Accede a tu cuenta para agendar más rápido";
+    authLoginFields.style.display = "block";
+    authRegisterFields.style.display = "none";
+    authSubmit.textContent = "Iniciar sesión";
+    authSwitchToRegister.style.display = "block";
+    authSwitchToLogin.style.display = "none";
+    authForgot.style.display = "block";
+  }else{
+    authTitle.textContent = "Crear cuenta";
+    authSubtitle.textContent = "Regístrate una vez y no vuelvas a escribir tus datos";
+    authLoginFields.style.display = "none";
+    authRegisterFields.style.display = "block";
+    authSubmit.textContent = "Crear cuenta";
+    authSwitchToRegister.style.display = "none";
+    authSwitchToLogin.style.display = "block";
+    authForgot.style.display = "none";
+  }
+  authModal.style.display = "flex";
+}
+function closeAuthModal(){ authModal.style.display = "none"; }
+
+authClose.addEventListener("click", closeAuthModal);
+authSwitchToRegister.addEventListener("click", () => openAuthModal("register"));
+authSwitchToLogin.addEventListener("click", () => openAuthModal("login"));
+
+authForgot.addEventListener("click", () => {
+  const email = document.getElementById("authEmail").value.trim();
+  if(!email){
+    authError.style.color = "#e7b7ac";
+    authError.textContent = "Escribe tu correo arriba primero.";
+    return;
+  }
+  sendPasswordResetEmail(auth, email)
+    .then(() => {
+      authError.style.color = "#9fce9a";
+      authError.textContent = "Te enviamos un correo para restablecer tu contraseña.";
+    })
+    .catch((err) => {
+      authError.style.color = "#e7b7ac";
+      authError.textContent = friendlyAuthError(err.code);
+    });
+});
+
+authSubmit.addEventListener("click", () => {
+  authError.textContent = "";
+  authError.style.color = "#e7b7ac";
+  authSubmit.disabled = true;
+  const original = authSubmit.textContent;
+  authSubmit.textContent = "Un momento…";
+
+  if(authMode === "login"){
+    const email = document.getElementById("authEmail").value.trim();
+    const pass = document.getElementById("authPass").value;
+    signInWithEmailAndPassword(auth, email, pass)
+      .then(() => closeAuthModal())
+      .catch((err) => { authError.textContent = friendlyAuthError(err.code); })
+      .finally(() => { authSubmit.disabled = false; authSubmit.textContent = original; });
+  }else{
+    const nombre = document.getElementById("regNombre").value.trim();
+    const celular = document.getElementById("regCelular").value.trim();
+    const email = document.getElementById("regEmail").value.trim();
+    const pass = document.getElementById("regPass").value;
+
+    if(!nombre || !celular){
+      authError.textContent = "Escribe tu nombre y celular.";
+      authSubmit.disabled = false; authSubmit.textContent = original;
+      return;
+    }
+
+    createUserWithEmailAndPassword(auth, email, pass)
+      .then((cred) => setDoc(doc(db, "clientes", cred.user.uid), { name: nombre, phone: celular, email: email }))
+      .then(() => closeAuthModal())
+      .catch((err) => { authError.textContent = friendlyAuthError(err.code); })
+      .finally(() => { authSubmit.disabled = false; authSubmit.textContent = original; });
+  }
+});
+
+function friendlyAuthError(code){
+  const map = {
+    "auth/invalid-email": "Ese correo no es válido.",
+    "auth/user-not-found": "No existe una cuenta con ese correo.",
+    "auth/wrong-password": "Contraseña incorrecta.",
+    "auth/invalid-credential": "Correo o contraseña incorrectos.",
+    "auth/email-already-in-use": "Ya existe una cuenta con ese correo. Inicia sesión.",
+    "auth/weak-password": "La contraseña debe tener al menos 6 caracteres.",
+    "auth/unauthorized-domain": "Este sitio todavía no está autorizado en Firebase."
+  };
+  return map[code] || "Ocurrió un error. Intenta de nuevo.";
+}
+
+let unsubProfile = null;
+
+function iniciarEscuchaPerfil(uid){
+  if(unsubProfile) unsubProfile();
+  unsubProfile = onSnapshot(doc(db, "clientes", uid), (snap) => {
+    currentProfile = snap.exists() ? snap.data() : (currentProfile || { name: "", phone: "", email: currentUser ? currentUser.email : "" });
+    renderAuthBar();
+    applyProfileToForm();
+    refreshTelegramUI();
+  }, () => {
+    currentProfile = currentProfile || { name: "", phone: "", email: currentUser ? currentUser.email : "" };
+  });
+}
+function detenerEscuchaPerfil(){
+  if(unsubProfile){ unsubProfile(); unsubProfile = null; }
+}
+
+onAuthStateChanged(auth, (user) => {
+  currentUser = user;
+  if(user){
+    iniciarEscuchaPerfil(user.uid);
+    // Con sesión iniciada, las reglas de Firestore ya permiten leer
+    // citas/bloqueos — arrancamos las escuchas en tiempo real.
+    iniciarEscuchaFirestore();
+    actualizarAccesoBarbero();
+  }else{
+    currentProfile = null;
+    detenerEscuchaPerfil();
+    renderAuthBar();
+    detenerEscuchaFirestore();
+    actualizarAccesoBarbero();
+  }
+});
+
+function renderAuthBar(){
+  if(currentUser && currentProfile){
+    authBar.innerHTML = `<span class="auth-hello">Hola, ${escapeHtml(currentProfile.name || currentUser.email)}</span><button id="btnAuthOut" class="auth-pill auth-pill-ghost">Cerrar sesión</button>`;
+    document.getElementById("btnAuthOut").addEventListener("click", () => signOut(auth));
+  }else{
+    authBar.innerHTML = `<button id="btnAuthOpen" class="auth-pill">Iniciar sesión</button>`;
+    document.getElementById("btnAuthOpen").addEventListener("click", () => openAuthModal("login"));
+  }
+  updateClientGate();
+}
+
+// El login es obligatorio para reservar: mientras no haya sesión, se muestra
+// la tarjeta de "Inicia sesión para reservar" en vez del formulario.
+function updateClientGate(){
+  const gate = document.getElementById("authGateCard");
+  const reserva = document.getElementById("reservaCard");
+  if(currentUser){
+    gate.style.display = "none";
+    reserva.classList.remove("locked");
+  }else{
+    gate.style.display = "block";
+    reserva.classList.add("locked");
+    fechaInput.disabled = true;
+    confirmCard.style.display = "none";
+  }
+}
+
+document.getElementById("btnAuthGateOpen").addEventListener("click", () => openAuthModal("login"));
+document.getElementById("btnAuthGateRegister").addEventListener("click", () => openAuthModal("register"));
+
+function applyProfileToForm(){
+  if(currentProfile){
+    if(currentProfile.name) nombreInput.value = currentProfile.name;
+    if(currentProfile.phone) celularInput.value = currentProfile.phone;
+    updateButtonState();
+  }
+}
+
+// Botón inicial (antes de que Firebase confirme si hay sesión activa)
+document.getElementById("btnAuthOpen").addEventListener("click", () => openAuthModal("login"));
+
+/* =========================================================
+   ACCESO AL PANEL DEL BARBERO — SOLO POR CORREO, SIN PIN
+   ========================================================= */
+const navBarbero = document.getElementById("navBarbero");
+const volverAReservas = document.getElementById("volverAReservas");
+const tabCliente = document.getElementById("tab-cliente");
+const tabBarbero = document.getElementById("tab-barbero");
+
+function esBarbero(){
+  return !!(currentUser && currentUser.email === BARBER_EMAIL);
+}
+
+function actualizarAccesoBarbero(){
+  navBarbero.style.display = esBarbero() ? "flex" : "none";
+  if(!esBarbero() && tabBarbero.classList.contains("active")){
+    irAVistaCliente();
+  }
+}
+
+function irAVistaCliente(){
+  tabCliente.classList.add("active"); tabBarbero.classList.remove("active");
+}
+function irAVistaBarbero(){
+  if(!esBarbero()){ irAVistaCliente(); return; }
+  tabBarbero.classList.add("active"); tabCliente.classList.remove("active");
+  refreshBarberPanel();
+}
+
+navBarbero.addEventListener("click", irAVistaBarbero);
+volverAReservas.addEventListener("click", irAVistaCliente);
+
+document.getElementById("btnSalirPanel").addEventListener("click", () => {
+  signOut(auth);
+  irAVistaCliente();
+});
+
+/* =========================================================
+   ESTADO EN MEMORIA (en vivo desde Firestore)
+   ========================================================= */
+let CITAS = [];
+let BLOQUEOS = [];
+let HORAS_BLOQUEADAS = [];
+let MARTES_ESPECIALES = [];
+let dataLoaded = false;
+
+/* =========================================================
+   RESPALDO / AVISOS (Apps Script) — Telegram + correo,
+   siempre en segundo plano, NO BLOQUEANTE.
+   ---------------------------------------------------------
+   Firestore sigue siendo la única fuente de verdad para
+   horarios, citas y bloqueos (por eso la app se siente
+   rápida). Apps Script solo se entera de cada acción para
+   mandar los avisos hacia afuera (Telegram + correo); si
+   falla o tarda, no le afecta nada a lo que ya quedó
+   guardado en Firestore.
+   ========================================================= */
+function apiPost(action, payload){
+  return fetch(WEBAPP_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" }, // evita el preflight de CORS
+    body: JSON.stringify({ action: action, payload: payload })
+  }).then(function(r){ return r.json(); });
+}
+
+/* =========================================================
+   FIRESTORE — ESCUCHAS EN TIEMPO REAL (fuente de verdad)
+   ========================================================= */
+let unsubCitas = null, unsubBloqueosDias = null, unsubBloqueosHoras = null, unsubMartes = null;
+
+function iniciarEscuchaFirestore(){
+  if(unsubCitas) return;
+
+  setSyncStatus("loading");
+
+  unsubCitas = onSnapshot(collection(db, "citas"), (snap) => {
+    CITAS = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    dataLoaded = true;
+    setSyncStatus("ok");
+    onDatosActualizados();
+  }, () => setSyncStatus("error"));
+
+  unsubBloqueosDias = onSnapshot(collection(db, "bloqueosDias"), (snap) => {
+    BLOQUEOS = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    onDatosActualizados();
+  });
+
+  unsubBloqueosHoras = onSnapshot(collection(db, "bloqueosHoras"), (snap) => {
+    HORAS_BLOQUEADAS = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    onDatosActualizados();
+  });
+
+  unsubMartes = onSnapshot(collection(db, "martesEspeciales"), (snap) => {
+    MARTES_ESPECIALES = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    onDatosActualizados();
+  });
+}
+
+function detenerEscuchaFirestore(){
+  if(unsubCitas){ unsubCitas(); unsubCitas = null; }
+  if(unsubBloqueosDias){ unsubBloqueosDias(); unsubBloqueosDias = null; }
+  if(unsubBloqueosHoras){ unsubBloqueosHoras(); unsubBloqueosHoras = null; }
+  if(unsubMartes){ unsubMartes(); unsubMartes = null; }
+  CITAS = []; BLOQUEOS = []; HORAS_BLOQUEADAS = []; MARTES_ESPECIALES = [];
+  dataLoaded = false;
+}
+
+function onDatosActualizados(){
+  if(fechaInput && fechaInput.value){
+    renderClientDay();
+  }
+  if(esBarbero()){
+    refreshBarberPanel();
+  }
+}
+
+function setSyncStatus(state){
+  const dot = document.getElementById("syncDot");
+  const txt = document.getElementById("syncText");
+  if(!dot || !txt) return;
+  if(state === "loading"){
+    dot.className = "sync-dot loading";
+    txt.textContent = "Actualizando…";
+  }else if(state === "error"){
+    dot.className = "sync-dot loading";
+    txt.textContent = "Sin conexión, reintenta";
+  }else{
+    dot.className = "sync-dot";
+    const now = new Date();
+    txt.textContent = "Al día · " + pad(now.getHours()) + ":" + pad(now.getMinutes());
+  }
+}
+
+/* =========================================================
+   UTILIDADES DE FECHA / HORA
+   ========================================================= */
+function pad(n){ return n.toString().padStart(2,"0"); }
+
+function minutesToLabel(min){
+  let h = Math.floor(min/60), m = min%60;
+  const ampm = h < 12 ? "a.m." : "p.m.";
+  let h12 = h % 12; if(h12 === 0) h12 = 12;
+  return `${h12}:${pad(m)} ${ampm}`;
+}
+
+function dateFromStr(str){ return new Date(str + "T00:00:00"); }
+
+function isBlocked(dateStr){
+  return BLOQUEOS.find(b => b.date === dateStr);
+}
+
+function esMartesAbierto(dateStr){
+  return MARTES_ESPECIALES.some(m => m.date === dateStr);
+}
+
+function prettyDate(dateStr){
+  const d = dateFromStr(dateStr);
+  return `${DIAS[d.getDay()]} ${d.getDate()} de ${MESES[d.getMonth()]} de ${d.getFullYear()}`;
+}
+
+function shortDateLabel(dateStr){
+  const d = dateFromStr(dateStr);
+  return `${DIAS_ABREV[d.getDay()]} ${d.getDate()} ${MESES_ABREV[d.getMonth()]}`;
+}
+
+function generateSlots(dateStr){
+  const day = dateFromStr(dateStr).getDay();
+  let sched = SCHEDULE[day];
+  if(day === 2){
+    sched = esMartesAbierto(dateStr) ? MARTES_SCHEDULE_EXCEPCION : null;
+  }
+  if(!sched) return [];
+  const slots = [];
+  sched.blocks.forEach(block => {
+    for(let m = block.start; m <= block.end; m += STEP){
+      slots.push(m);
+    }
+  });
+  return slots;
+}
+
+function todayStr(){
+  const d = new Date();
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+
+function apptDateTime(a){
+  const d = dateFromStr(a.date);
+  d.setMinutes(a.minutes);
+  return d;
+}
+
+function getStatus(a){
+  if(a.status === "realizada") return "realizada";
+  if(apptDateTime(a) < new Date()) return "retrasada";
+  return a.status || "pendiente";
+}
+
+function escapeHtml(str){
+  const d = document.createElement("div");
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function formatPrice(n){
+  return "$" + n.toLocaleString("es-CO");
+}
+
+/* =========================================================
+   VISTA CLIENTE — SERVICIO
+   ========================================================= */
+const serviciosWrap = document.getElementById("serviciosWrap");
+const fechaSection = document.getElementById("fechaSection");
+let selectedService = null;
+
+function renderServicios(){
+  serviciosWrap.innerHTML = "";
+  SERVICIOS.forEach(svc => {
+    const el = document.createElement("div");
+    el.className = "service-option" + (selectedService && selectedService.id === svc.id ? " selected" : "");
+    el.innerHTML = `<span class="name">${escapeHtml(svc.name)}</span><span class="price">${formatPrice(svc.price)}</span>`;
+    el.addEventListener("click", () => {
+      selectedService = svc;
+      renderServicios();
+      fechaSection.style.display = "block";
+      if(currentUser) fechaInput.disabled = false;
+      // Si ya había fecha/hora elegida con otro servicio, reiniciamos ese tramo
+      selectedSlot = null;
+      formWrap.style.display = "none";
+      if(fechaInput.value) renderClientDay();
+    });
+    serviciosWrap.appendChild(el);
+  });
+}
+
+/* =========================================================
+   VISTA CLIENTE — FECHA / HORA / FORMULARIO
+   ========================================================= */
+const fechaInput = document.getElementById("fecha");
+const diaInfo = document.getElementById("diaInfo");
+const cerradoMsg = document.getElementById("cerradoMsg");
+const slotsWrap = document.getElementById("slotsWrap");
+const slotsDiv = document.getElementById("slots");
+const formWrap = document.getElementById("formWrap");
+const nombreInput = document.getElementById("nombre");
+const celularInput = document.getElementById("celular");
+const btnReservar = document.getElementById("btnReservar");
+const confirmCard = document.getElementById("confirmCard");
+
+fechaInput.min = todayStr();
+nombreInput.addEventListener("input", updateButtonState);
+celularInput.addEventListener("input", updateButtonState);
+
+let selectedSlot = null;
+
+function resetClientView(){
+  fechaInput.value = "";
+  if(!currentUser){
+    nombreInput.value = "";
+    celularInput.value = "";
+  }
+  selectedSlot = null;
+  selectedService = null;
+  confirmCard.style.display = "none";
+  formWrap.style.display = "none";
+  slotsWrap.style.display = "none";
+  diaInfo.style.display = "none";
+  cerradoMsg.style.display = "none";
+  fechaSection.style.display = "none";
+  renderServicios();
+  if(currentUser && currentProfile) applyProfileToForm();
+}
+window.addEventListener("pageshow", resetClientView);
+
+fechaInput.addEventListener("change", () => {
+  renderClientDay();
+});
+
+function renderClientDay(){
+  const dateStr = fechaInput.value;
+  selectedSlot = null;
+  confirmCard.style.display = "none";
+  formWrap.style.display = "none";
+  slotsWrap.style.display = "none";
+  diaInfo.style.display = "none";
+  cerradoMsg.style.display = "none";
+
+  if(!dateStr) return;
+
+  if(!dataLoaded){
+    diaInfo.style.display = "block";
+    diaInfo.textContent = "Cargando disponibilidad…";
+    return;
+  }
+
+  const day = dateFromStr(dateStr).getDay();
+  const blocked = isBlocked(dateStr);
+  const martesCerrado = (day === 2) && !esMartesAbierto(dateStr);
+
+  if(blocked || martesCerrado){
+    cerradoMsg.style.display = "block";
+    cerradoMsg.innerHTML = "";
+    if(blocked){
+      cerradoMsg.textContent = `La barbería no atiende este día${blocked.reason ? " — " + blocked.reason : ""}. Elige otra fecha.`;
+    }else{
+      const p = document.createElement("div");
+      p.textContent = "Los martes no atendemos. Si es urgente, escríbenos por WhatsApp.";
+      cerradoMsg.appendChild(p);
+      const wa = document.createElement("a");
+      wa.className = "whatsapp-btn";
+      wa.target = "_blank";
+      wa.style.marginTop = "12px";
+      wa.href = `https://wa.me/${BARBER_WHATSAPP}?text=${encodeURIComponent("Hola! Necesito un turno un martes, ¿tienen disponibilidad?")}`;
+      wa.innerHTML = `<span>Escribir por WhatsApp</span>`;
+      cerradoMsg.appendChild(wa);
+    }
+    return;
+  }
+
+  let schedForText = SCHEDULE[day];
+  if(day === 2) schedForText = MARTES_SCHEDULE_EXCEPCION;
+
+  diaInfo.style.display = "block";
+  let horarioTexto = "sin horario";
+  if(schedForText){
+    const primero = schedForText.blocks[0];
+    const ultimo = schedForText.blocks[schedForText.blocks.length - 1];
+    horarioTexto = `${minutesToLabel(primero.start)} a ${minutesToLabel(ultimo.end)}`;
+    if(schedForText.blocks.length > 1){
+      horarioTexto += ` (descanso de ${minutesToLabel(schedForText.blocks[0].end)} a ${minutesToLabel(schedForText.blocks[1].start)})`;
+    }
+  }
+  diaInfo.textContent = `${DIAS[day]} · horario de atención: ${horarioTexto}`;
+
+  renderSlots(dateStr);
+  slotsWrap.style.display = "block";
+}
+
+function renderSlots(dateStr){
+  const allSlots = generateSlots(dateStr);
+  const taken = CITAS.filter(a => a.date === dateStr).map(a => a.minutes);
+  const horasBloqueadas = HORAS_BLOQUEADAS.filter(h => h.date === dateStr).map(h => h.minutes);
+
+  const isToday = dateStr === todayStr();
+  const now = new Date();
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+  slotsDiv.innerHTML = "";
+  allSlots.forEach(min => {
+    const btn = document.createElement("div");
+    const isTaken = taken.includes(min);
+    const isHoraBloqueada = horasBloqueadas.includes(min);
+    const isPast = isToday && min <= nowMinutes;
+    const noDisponible = isTaken || isHoraBloqueada;
+    btn.className = "slot" + (noDisponible ? " taken" : (isPast ? " past" : ""));
+    btn.textContent = noDisponible ? (isTaken ? "Ocupado" : "No disponible") : minutesToLabel(min);
+    if(!noDisponible && !isPast){
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".slot").forEach(s => s.classList.remove("selected"));
+        btn.classList.add("selected");
+        selectedSlot = min;
+        formWrap.style.display = "block";
+        updateButtonState();
+        formWrap.scrollIntoView({behavior:"smooth", block:"nearest"});
+      });
+    }
+    slotsDiv.appendChild(btn);
+  });
+}
+
+function updateButtonState(){
+  btnReservar.disabled = !(selectedService && selectedSlot !== null && nombreInput.value.trim() && celularInput.value.trim());
+}
+
+btnReservar.addEventListener("click", () => {
+  const dateStr = fechaInput.value;
+  const minutes = selectedSlot;
+  const citaId = `${dateStr}_${minutes}`;
+
+  const cita = {
+    date: dateStr,
+    minutes: minutes,
+    time: minutesToLabel(minutes),
+    name: nombreInput.value.trim(),
+    phone: celularInput.value.trim(),
+    email: currentUser ? currentUser.email : "",
+    uid: currentUser ? currentUser.uid : "",
+    service: selectedService,
+    status: "pendiente",
+    createdAt: new Date().toISOString()
+  };
+
+  btnReservar.disabled = true;
+  btnReservar.textContent = "Guardando…";
+
+  const citaRef = doc(db, "citas", citaId);
+  const diaRef = doc(db, "bloqueosDias", dateStr);
+  const horaRef = doc(db, "bloqueosHoras", citaId);
+
+  runTransaction(db, (transaction) => {
+    return Promise.all([
+      transaction.get(citaRef),
+      transaction.get(diaRef),
+      transaction.get(horaRef)
+    ]).then(([citaSnap, diaSnap, horaSnap]) => {
+      if(citaSnap.exists()) throw new Error("OCUPADO");
+      if(diaSnap.exists()) throw new Error("DIA_BLOQUEADO");
+      if(horaSnap.exists()) throw new Error("HORA_BLOQUEADA");
+      transaction.set(citaRef, cita);
+    });
+  })
+    .then(() => {
+      btnReservar.textContent = "Confirmar cita";
+
+      document.getElementById("cNombre").textContent = cita.name;
+      document.getElementById("cCelular").textContent = cita.phone;
+      document.getElementById("cServicio").textContent = cita.service.name + " · " + formatPrice(cita.service.price);
+      document.getElementById("cFecha").textContent = prettyDate(cita.date);
+      document.getElementById("cHora").textContent = cita.time;
+
+      formWrap.style.display = "none";
+      slotsWrap.style.display = "none";
+      diaInfo.style.display = "none";
+      confirmCard.style.display = "block";
+      refreshTelegramUI();
+      confirmCard.scrollIntoView({behavior:"smooth", block:"start"});
+
+      // Aviso hacia afuera (Telegram + correo), EN SEGUNDO PLANO:
+      // si esto falla, no le afecta nada al cliente, su cita ya
+      // quedó guardada arriba, en Firestore.
+      apiPost("crearCita", { ...cita, id: citaId }).catch(() => {});
+    })
+    .catch((err) => {
+      btnReservar.textContent = "Confirmar cita";
+      updateButtonState();
+      if(err && err.message === "OCUPADO"){
+        alert("Ese horario acaba de ser reservado por otra persona. Elige otro, por favor.");
+      }else if(err && err.message === "DIA_BLOQUEADO"){
+        alert("Ese día la barbería no atiende. Elige otra fecha.");
+      }else if(err && err.message === "HORA_BLOQUEADA"){
+        alert("Esa hora no está disponible. Elige otro horario.");
+      }else{
+        alert("No se pudo registrar la cita. Revisa tu conexión e intenta de nuevo.");
+      }
+      renderSlots(dateStr);
+    });
+});
+
+document.getElementById("btnNueva").addEventListener("click", resetClientView);
+
+/* =========================================================
+   TELEGRAM — botón opcional en la confirmación
+   ========================================================= */
+function telegramSvg(){
+  return `<svg viewBox="0 0 240 240" width="22" height="22" aria-hidden="true"><circle cx="120" cy="120" r="120" fill="#fff" opacity="0"/><path fill="#fff" d="M186 60 L36 116c-6 2-6 6-1 8l38 12 15 46c2 5 4 6 8 3l22-16 30 22c4 3 8 1 9-4l24-114c2-8-3-11-9-9z"/></svg>`;
+}
+
+function refreshTelegramUI(){
+  const wrap = document.getElementById("telegramWrap");
+  if(!wrap) return;
+  if(confirmCard.style.display === "none") return; // solo aplica si la tarjeta de confirmación está visible
+  wrap.innerHTML = "";
+  if(currentProfile && currentProfile.telegramChatId){
+    const ok = document.createElement("div");
+    ok.className = "telegram-ok";
+    ok.textContent = "✓ Ya tienes activados tus recordatorios por Telegram.";
+    wrap.appendChild(ok);
+  }else if(currentUser){
+    const a = document.createElement("a");
+    a.className = "telegram-btn";
+    a.target = "_blank";
+    a.href = `https://t.me/${TELEGRAM_BOT_USERNAME}?start=${currentUser.uid}`;
+    a.innerHTML = `${telegramSvg()}<span>Activar recordatorios por Telegram</span>`;
+    wrap.appendChild(a);
+  }
+}
+
+/* =========================================================
+   VISTA BARBERO
+   ========================================================= */
+function checkForNewCitas(){
+  if(lastKnownCitasCount !== null && CITAS.length > lastKnownCitasCount){
+    // El aviso real (sonido en el celular) llega por Telegram; aquí solo
+    // mantenemos el contador para no repetir lógica innecesaria.
+  }
+  lastKnownCitasCount = CITAS.length;
+}
+let lastKnownCitasCount = null;
+
+function refreshBarberPanel(){
+  if(!esBarbero()) return;
+  checkForNewCitas();
+  renderStats();
+  renderListaCitas();
+  renderBloqueos();
+  renderMartes();
+  renderHorasBloqueadas();
+}
+
+function renderStats(){
+  document.getElementById("statTotal").textContent = CITAS.length;
+  const hoy = todayStr();
+  document.getElementById("statHoy").textContent = CITAS.filter(a => a.date === hoy).length;
+
+  const now = new Date();
+  const future = CITAS.filter(a => apptDateTime(a) >= now).sort((a,b) => apptDateTime(a) - apptDateTime(b));
+  const statProx = document.getElementById("statProx");
+  if(future.length){
+    statProx.textContent = `${shortDateLabel(future[0].date)} · ${future[0].time}`;
+    statProx.style.fontSize = "16px";
+  }else{
+    statProx.textContent = "—";
+    statProx.style.fontSize = "";
+  }
+}
+
+function serviceLabel(a){
+  return a.service && a.service.name ? a.service.name : "—";
+}
+
+function renderListaCitas(){
+  const wrap = document.getElementById("listaCitas");
+  wrap.innerHTML = "";
+
+  let citasActivas = CITAS.filter(a => getStatus(a) !== "realizada");
+
+  const filtroFecha = filtroFechaCitas.value;
+  if(filtroFecha){
+    citasActivas = citasActivas.filter(a => a.date === filtroFecha);
+  }
+
+  if(citasActivas.length === 0){
+    wrap.innerHTML = filtroFecha
+      ? `<div class="empty">No hay citas pendientes para el ${prettyDate(filtroFecha)}.</div>`
+      : '<div class="empty">No hay citas pendientes por atender. Lo ya realizado lo puedes ver en "Buscar histórico".</div>';
+    return;
+  }
+
+  const byDate = {};
+  citasActivas.forEach(a => { (byDate[a.date] = byDate[a.date] || []).push(a); });
+  const dates = Object.keys(byDate).sort();
+
+  dates.forEach(dateStr => {
+    const title = document.createElement("div");
+    title.className = "group-title";
+    title.textContent = prettyDate(dateStr);
+    wrap.appendChild(title);
+
+    byDate[dateStr].sort((a,b) => a.minutes - b.minutes).forEach(a => {
+      const status = getStatus(a);
+      const item = document.createElement("div");
+      item.className = "appt-item";
+      item.innerHTML = `
+        <div class="info"><b>${escapeHtml(a.name)}</b><span>${escapeHtml(a.phone)} · ${escapeHtml(serviceLabel(a))}</span></div>
+        <div class="right">
+          <div class="when">${a.time}</div>
+          <select class="badge badge-select ${status}" data-id="${a.id}">
+            <option value="pendiente" ${status === "pendiente" ? "selected" : ""}>Pendiente</option>
+            <option value="retrasada" ${status === "retrasada" ? "selected" : ""}>Retrasada</option>
+            <option value="realizada" ${status === "realizada" ? "selected" : ""}>Realizada</option>
+          </select>
+        </div>
+      `;
+      const delBtn = document.createElement("button");
+      delBtn.className = "danger";
+      delBtn.textContent = "Cancelar";
+      delBtn.addEventListener("click", () => {
+        if(confirm(`¿Cancelar la cita de ${a.name} el ${prettyDate(a.date)} a las ${a.time}?`)){
+          delBtn.disabled = true;
+          deleteDoc(doc(db, "citas", a.id))
+            .then(() => {
+              apiPost("cancelarCita", { id: a.id }).catch(() => {});
+            })
+            .catch(() => { alert("No se pudo cancelar. Intenta de nuevo."); delBtn.disabled = false; });
+        }
+      });
+      item.querySelector(".right").appendChild(delBtn);
+      wrap.appendChild(item);
+    });
+  });
+}
+
+document.getElementById("listaCitas").addEventListener("change", (e) => {
+  if(!e.target.classList.contains("badge-select")) return;
+  const id = e.target.dataset.id;
+  const val = e.target.value;
+  e.target.disabled = true;
+  updateDoc(doc(db, "citas", id), { status: val })
+    .then(() => {
+      apiPost("actualizarEstado", { id: id, status: val }).catch(() => {});
+    })
+    .catch(() => { alert("No se pudo actualizar el estado. Intenta de nuevo."); e.target.disabled = false; });
+});
+
+const filtroFechaCitas = document.getElementById("filtroFechaCitas");
+filtroFechaCitas.min = todayStr();
+filtroFechaCitas.value = todayStr();
+
+filtroFechaCitas.addEventListener("change", () => {
+  renderListaCitas();
+});
+
+document.getElementById("btnVerTodasCitas").addEventListener("click", () => {
+  filtroFechaCitas.value = "";
+  renderListaCitas();
+});
+
+const fechaConsulta = document.getElementById("fechaConsulta");
+fechaConsulta.min = todayStr();
+fechaConsulta.addEventListener("change", () => {
+  const dateStr = fechaConsulta.value;
+  const availSummary = document.getElementById("availSummary");
+  const availClosed = document.getElementById("availClosed");
+  availSummary.style.display = "none";
+  availClosed.style.display = "none";
+  if(!dateStr) return;
+
+  const blocked = isBlocked(dateStr);
+  const day = dateFromStr(dateStr).getDay();
+  const martesCerrado = (day === 2) && !esMartesAbierto(dateStr);
+  if(blocked || martesCerrado){
+    availClosed.style.display = "block";
+    availClosed.textContent = blocked
+      ? `Día bloqueado${blocked.reason ? " — " + blocked.reason : ""}.`
+      : "Martes cerrado (sin excepción abierta).";
+    return;
+  }
+
+  const all = generateSlots(dateStr);
+  const taken = CITAS.filter(a => a.date === dateStr).length;
+  const horasBloqueadas = HORAS_BLOQUEADAS.filter(h => h.date === dateStr).length;
+  const ocupados = taken + horasBloqueadas;
+  document.getElementById("availTotal").textContent = all.length;
+  document.getElementById("availOcup").textContent = ocupados;
+  document.getElementById("availLibre").textContent = all.length - ocupados;
+  availSummary.style.display = "flex";
+});
+
+/* --- Bloqueo de días --- */
+const bloqueoFecha = document.getElementById("bloqueoFecha");
+bloqueoFecha.min = todayStr();
+
+document.getElementById("btnBloquear").addEventListener("click", () => {
+  const dateStr = bloqueoFecha.value;
+  if(!dateStr){ alert("Selecciona una fecha para bloquear."); return; }
+
+  if(BLOQUEOS.some(b => b.date === dateStr)){ alert("Ese día ya está bloqueado."); return; }
+
+  const existingAppts = CITAS.filter(a => a.date === dateStr);
+  if(existingAppts.length > 0){
+    const ok = confirm(`Ya hay ${existingAppts.length} cita(s) registradas ese día. ¿Bloquear de todas formas?`);
+    if(!ok) return;
+  }
+
+  const motivo = document.getElementById("bloqueoMotivo").value.trim();
+  const btn = document.getElementById("btnBloquear");
+  btn.disabled = true;
+  btn.textContent = "Bloqueando…";
+
+  setDoc(doc(db, "bloqueosDias", dateStr), { date: dateStr, reason: motivo })
+    .then(() => {
+      btn.disabled = false;
+      btn.textContent = "Bloquear día";
+      bloqueoFecha.value = "";
+      document.getElementById("bloqueoMotivo").value = "";
+      apiPost("bloquearDia", { date: dateStr, reason: motivo }).catch(() => {});
+    })
+    .catch(() => {
+      btn.disabled = false;
+      btn.textContent = "Bloquear día";
+      alert("No se pudo conectar. Intenta de nuevo.");
+    });
+});
+
+function renderBloqueos(){
+  const list = [...BLOQUEOS].sort((a,b) => a.date.localeCompare(b.date));
+  const wrap = document.getElementById("listaBloqueos");
+  wrap.innerHTML = "";
+
+  if(list.length === 0){
+    wrap.innerHTML = '<div class="empty">No hay días bloqueados.</div>';
+    return;
+  }
+
+  list.forEach(b => {
+    const item = document.createElement("div");
+    item.className = "blocked-item";
+    item.innerHTML = `
+      <div>
+        <div class="d">${prettyDate(b.date)}</div>
+        ${b.reason ? `<div class="m">${escapeHtml(b.reason)}</div>` : ""}
+      </div>
+    `;
+    const unBtn = document.createElement("button");
+    unBtn.className = "danger";
+    unBtn.textContent = "Desbloquear";
+    unBtn.addEventListener("click", () => {
+      unBtn.disabled = true;
+      deleteDoc(doc(db, "bloqueosDias", b.date))
+        .then(() => {
+          apiPost("desbloquearDia", { date: b.date }).catch(() => {});
+        })
+        .catch(() => { alert("No se pudo desbloquear. Intenta de nuevo."); unBtn.disabled = false; });
+    });
+    item.appendChild(unBtn);
+    wrap.appendChild(item);
+  });
+}
+
+/* --- Martes especiales --- */
+const martesFecha = document.getElementById("martesFecha");
+martesFecha.min = todayStr();
+
+document.getElementById("btnAbrirMartes").addEventListener("click", () => {
+  const dateStr = martesFecha.value;
+  if(!dateStr){ alert("Selecciona una fecha."); return; }
+  if(dateFromStr(dateStr).getDay() !== 2){ alert("Esa fecha no es martes. Elige un martes."); return; }
+  if(esMartesAbierto(dateStr)){ alert("Ese martes ya está abierto."); return; }
+
+  const btn = document.getElementById("btnAbrirMartes");
+  btn.disabled = true;
+  btn.textContent = "Abriendo…";
+
+  setDoc(doc(db, "martesEspeciales", dateStr), { date: dateStr })
+    .then(() => {
+      btn.disabled = false;
+      btn.textContent = "Abrir este martes";
+      martesFecha.value = "";
+      apiPost("abrirMartesEspecial", { date: dateStr }).catch(() => {});
+    })
+    .catch(() => {
+      btn.disabled = false;
+      btn.textContent = "Abrir este martes";
+      alert("No se pudo conectar. Intenta de nuevo.");
+    });
+});
+
+function renderMartes(){
+  const list = [...MARTES_ESPECIALES].sort((a,b) => a.date.localeCompare(b.date));
+  const wrap = document.getElementById("listaMartes");
+  wrap.innerHTML = "";
+
+  if(list.length === 0){
+    wrap.innerHTML = '<div class="empty">No hay martes especiales abiertos.</div>';
+    return;
+  }
+
+  list.forEach(m => {
+    const item = document.createElement("div");
+    item.className = "blocked-item";
+    item.innerHTML = `
+      <div>
+        <div class="d">${prettyDate(m.date)}</div>
+        <div class="m">Horario de lunes/miércoles</div>
+      </div>
+    `;
+    const unBtn = document.createElement("button");
+    unBtn.className = "danger";
+    unBtn.textContent = "Cerrar este martes";
+    unBtn.addEventListener("click", () => {
+      unBtn.disabled = true;
+      deleteDoc(doc(db, "martesEspeciales", m.date))
+        .then(() => {
+          apiPost("cerrarMartesEspecial", { date: m.date }).catch(() => {});
+        })
+        .catch(() => { alert("No se pudo cerrar. Intenta de nuevo."); unBtn.disabled = false; });
+    });
+    item.appendChild(unBtn);
+    wrap.appendChild(item);
+  });
+}
+
+/* --- Bloqueo de horas puntuales --- */
+const bloqueoHoraFecha = document.getElementById("bloqueoHoraFecha");
+const bloqueoHoraSelect = document.getElementById("bloqueoHoraSelect");
+
+bloqueoHoraFecha.addEventListener("change", () => {
+  const dateStr = bloqueoHoraFecha.value;
+  if(!dateStr){
+    bloqueoHoraSelect.innerHTML = '<option value="">Elige una fecha primero</option>';
+    return;
+  }
+  const slots = generateSlots(dateStr);
+  if(slots.length === 0){
+    bloqueoHoraSelect.innerHTML = '<option value="">Sin horario ese día</option>';
+    return;
+  }
+  bloqueoHoraSelect.innerHTML = slots.map(m => `<option value="${m}">${minutesToLabel(m)}</option>`).join("");
+});
+
+document.getElementById("btnBloquearHora").addEventListener("click", () => {
+  const dateStr = bloqueoHoraFecha.value;
+  const minutes = bloqueoHoraSelect.value;
+
+  if(!dateStr || minutes === ""){
+    alert("Selecciona una fecha y una hora.");
+    return;
+  }
+
+  if(HORAS_BLOQUEADAS.some(h => h.date === dateStr && Number(h.minutes) === Number(minutes))){
+    alert("Esa hora ya está bloqueada.");
+    return;
+  }
+
+  const yaOcupada = CITAS.some(a => a.date === dateStr && Number(a.minutes) === Number(minutes));
+  if(yaOcupada){
+    const ok = confirm("Ya hay una cita registrada en ese horario. La cita sigue existiendo igual; solo se bloqueará para que nadie más reserve ahí si llega a cancelarse. ¿Bloquear de todas formas?");
+    if(!ok) return;
+  }
+
+  const time = minutesToLabel(Number(minutes));
+  const motivo = document.getElementById("bloqueoHoraMotivo").value.trim();
+  const btn = document.getElementById("btnBloquearHora");
+  btn.disabled = true;
+  btn.textContent = "Bloqueando…";
+
+  const horaId = `${dateStr}_${Number(minutes)}`;
+  setDoc(doc(db, "bloqueosHoras", horaId), { date: dateStr, minutes: Number(minutes), time: time, reason: motivo })
+    .then(() => {
+      btn.disabled = false;
+      btn.textContent = "Bloquear hora";
+      bloqueoHoraFecha.value = "";
+      bloqueoHoraSelect.innerHTML = '<option value="">Elige una fecha primero</option>';
+      document.getElementById("bloqueoHoraMotivo").value = "";
+      apiPost("bloquearHora", { date: dateStr, minutes: Number(minutes), time: time, reason: motivo }).catch(() => {});
+    })
+    .catch(() => {
+      btn.disabled = false;
+      btn.textContent = "Bloquear hora";
+      alert("No se pudo conectar. Intenta de nuevo.");
+    });
+});
+
+function renderHorasBloqueadas(){
+  const list = [...HORAS_BLOQUEADAS].sort((a,b) => (a.date + String(a.minutes).padStart(4,"0")).localeCompare(b.date + String(b.minutes).padStart(4,"0")));
+  const wrap = document.getElementById("listaHorasBloqueadas");
+  wrap.innerHTML = "";
+
+  if(list.length === 0){
+    wrap.innerHTML = '<div class="empty">No hay horas bloqueadas.</div>';
+    return;
+  }
+
+  list.forEach(h => {
+    const item = document.createElement("div");
+    item.className = "blocked-item";
+    item.innerHTML = `
+      <div>
+        <div class="d">${prettyDate(h.date)} · ${h.time}</div>
+        ${h.reason ? `<div class="m">${escapeHtml(h.reason)}</div>` : ""}
+      </div>
+    `;
+    const unBtn = document.createElement("button");
+    unBtn.className = "danger";
+    unBtn.textContent = "Desbloquear";
+    unBtn.addEventListener("click", () => {
+      unBtn.disabled = true;
+      deleteDoc(doc(db, "bloqueosHoras", h.id))
+        .then(() => {
+          apiPost("desbloquearHora", { date: h.date, minutes: h.minutes }).catch(() => {});
+        })
+        .catch(() => { alert("No se pudo desbloquear. Intenta de nuevo."); unBtn.disabled = false; });
+    });
+    item.appendChild(unBtn);
+    wrap.appendChild(item);
+  });
+}
+
+/* --- Buscar histórico --- */
+const historialFecha = document.getElementById("historialFecha");
+historialFecha.addEventListener("change", () => {
+  const dateStr = historialFecha.value;
+  const wrap = document.getElementById("historialResultado");
+  wrap.innerHTML = "";
+  if(!dateStr) return;
+
+  const blocked = isBlocked(dateStr);
+  if(blocked){
+    const div = document.createElement("div");
+    div.className = "closed-msg";
+    div.textContent = `Ese día estuvo bloqueado${blocked.reason ? " — " + blocked.reason : ""}.`;
+    wrap.appendChild(div);
+  }
+
+  const dayAppts = CITAS.filter(a => a.date === dateStr).sort((a,b) => a.minutes - b.minutes);
+
+  if(dayAppts.length === 0){
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent = "No hay citas registradas ese día.";
+    wrap.appendChild(empty);
+    return;
+  }
+
+  dayAppts.forEach(a => {
+    const status = getStatus(a);
+    const item = document.createElement("div");
+    item.className = "appt-item";
+    item.innerHTML = `
+      <div class="info"><b>${escapeHtml(a.name)}</b><span>${escapeHtml(a.phone)} · ${escapeHtml(serviceLabel(a))}</span></div>
+      <div class="right">
+        <div class="when">${a.time}</div>
+        <span class="badge ${status}">${status === "realizada" ? "Realizada" : status === "retrasada" ? "Retrasada" : "Pendiente"}</span>
+      </div>
+    `;
+    wrap.appendChild(item);
+  });
+});
+
+document.getElementById("btnRefrescar").addEventListener("click", () => {
+  refreshBarberPanel();
+});
+
+/* =========================================================
+   INSTALAR COMO APP (PWA)
+   ========================================================= */
+const btnInstalarApp = document.getElementById("btnInstalarApp");
+const iosInstallHint = document.getElementById("iosInstallHint");
+let deferredInstallPrompt = null;
+
+function yaEstaInstalada(){
+  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+}
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  if(!yaEstaInstalada()) btnInstalarApp.style.display = "block";
+});
+
+btnInstalarApp.addEventListener("click", async () => {
+  if(!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null;
+  btnInstalarApp.style.display = "none";
+});
+
+window.addEventListener("appinstalled", () => {
+  btnInstalarApp.style.display = "none";
+});
+
+function esIOS(){
+  return /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+}
+if(esIOS() && !yaEstaInstalada()){
+  iosInstallHint.style.display = "block";
+}
+
+/* =========================================================
+   GALERÍA DE FOTOS
+   ========================================================= */
+const galeriaScroll = document.getElementById("galeriaScroll");
+const lightboxOverlay = document.getElementById("lightboxOverlay");
+const lightboxImg = document.getElementById("lightboxImg");
+const lightboxClose = document.getElementById("lightboxClose");
+
+function renderGaleria(){
+  galeriaScroll.innerHTML = "";
+  const FOTOS_POR_PAGINA = 6;
+
+  const paginas = [];
+  for (let i = 0; i < GALERIA_FOTOS.length; i += FOTOS_POR_PAGINA) {
+    paginas.push(GALERIA_FOTOS.slice(i, i + FOTOS_POR_PAGINA));
+  }
+
+  paginas.forEach(fotosDeEstaPagina => {
+    const pagina = document.createElement("div");
+    pagina.className = "gallery-page";
+
+    fotosDeEstaPagina.forEach(src => {
+      const img = document.createElement("img");
+      img.src = src;
+      img.loading = "lazy";
+      img.alt = "Foto de Santiago Barber";
+      img.addEventListener("error", () => {
+        img.remove();
+        if (pagina.children.length === 0) pagina.remove();
+        checkGaleriaVacia();
+      });
+      img.addEventListener("click", () => abrirLightbox(src));
+      pagina.appendChild(img);
+    });
+
+    galeriaScroll.appendChild(pagina);
+  });
+
+  function checkGaleriaVacia(){
+    if(galeriaScroll.children.length === 0){
+      galeriaScroll.innerHTML = '<div class="gallery-empty">Muy pronto vas a ver fotos de cortes aquí ✂️</div>';
+    }
+  }
+}
+
+function abrirLightbox(src){
+  lightboxImg.src = src;
+  lightboxOverlay.style.display = "flex";
+}
+function cerrarLightbox(){
+  lightboxOverlay.style.display = "none";
+  lightboxImg.src = "";
+}
+lightboxClose.addEventListener("click", cerrarLightbox);
+lightboxOverlay.addEventListener("click", (e) => { if(e.target === lightboxOverlay) cerrarLightbox(); });
+
+/* =========================================================
+   REDES SOCIALES
+   ========================================================= */
+const socialRow = document.getElementById("socialRow");
+
+const SOCIAL_ICONS = {
+  facebook: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.51 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.78-1.63 1.57v1.88h2.78l-.44 2.91h-2.34V22c4.78-.76 8.44-4.92 8.44-9.94z"/></svg>`,
+  instagram: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c2.72 0 3.06.01 4.12.06 1.06.05 1.79.22 2.43.47.66.26 1.21.6 1.76 1.15.55.55.9 1.1 1.15 1.76.25.64.42 1.37.47 2.43.05 1.06.06 1.4.06 4.12s-.01 3.06-.06 4.12c-.05 1.06-.22 1.79-.47 2.43a4.9 4.9 0 0 1-1.15 1.76 4.9 4.9 0 0 1-1.76 1.15c-.64.25-1.37.42-2.43.47-1.06.05-1.4.06-4.12.06s-3.06-.01-4.12-.06c-1.06-.05-1.79-.22-2.43-.47a4.9 4.9 0 0 1-1.76-1.15 4.9 4.9 0 0 1-1.15-1.76c-.25-.64-.42-1.37-.47-2.43C2.01 15.06 2 14.72 2 12s.01-3.06.06-4.12c.05-1.06.22-1.79.47-2.43.26-.66.6-1.21 1.15-1.76a4.9 4.9 0 0 1 1.76-1.15c.64-.25 1.37-.42 2.43-.47C8.94 2.01 9.28 2 12 2zm0 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 8.2a3.2 3.2 0 1 1 0-6.4 3.2 3.2 0 0 1 0 6.4zm5.2-8.4a1.17 1.17 0 1 1 0-2.34 1.17 1.17 0 0 1 0 2.34z"/></svg>`,
+  tiktok: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.7 2h-3.3v13.9a2.85 2.85 0 1 1-2.02-2.73V9.8a6.2 6.2 0 1 0 5.32 6.14V9.05a7.9 7.9 0 0 0 4.6 1.47V7.2a4.6 4.6 0 0 1-4.6-4.6V2z"/></svg>`
+};
+
+function renderSocial(){
+  socialRow.innerHTML = "";
+  Object.keys(SOCIAL_LINKS).forEach(key => {
+    const url = SOCIAL_LINKS[key];
+    if(!url) return;
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.className = "social-btn";
+    a.innerHTML = SOCIAL_ICONS[key] || "";
+    socialRow.appendChild(a);
+  });
+}
+
+/* =========================================================
+   ARRANQUE
+   ========================================================= */
+resetClientView();
+renderGaleria();
+renderSocial();
+actualizarAccesoBarbero();
+
+const btnPreciosWhatsapp = document.getElementById("btnPreciosWhatsapp");
+if (btnPreciosWhatsapp) {
+  const mensajePrecios = "Hola Santiago Barber, quiero agendar un servicio ✂️";
+  btnPreciosWhatsapp.href = `https://wa.me/${BARBER_WHATSAPP}?text=${encodeURIComponent(mensajePrecios)}`;
+}
+</script>
+</body>
+</html>

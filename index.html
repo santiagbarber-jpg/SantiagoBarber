@@ -906,12 +906,12 @@ onAuthStateChanged(auth, (user) => {
   currentUser = user;
   if(user){
     iniciarEscuchaPerfil(user.uid);
-    // Con sesión iniciada, las reglas de Firestore ya permiten leer
-    // citas/bloqueos — arrancamos las escuchas en tiempo real.
     iniciarEscuchaFirestore();
     actualizarAccesoBarbero();
+    verificarTelegramVinculado().then(() => refreshTelegramUI());
   }else{
     currentProfile = null;
+    telegramLinked = false;
     detenerEscuchaPerfil();
     renderAuthBar();
     detenerEscuchaFirestore();
@@ -1022,6 +1022,18 @@ function apiPost(action, payload){
     headers: { "Content-Type": "text/plain;charset=utf-8" }, // evita el preflight de CORS
     body: JSON.stringify({ action: action, payload: payload })
   }).then(function(r){ return r.json(); });
+}
+
+// El vínculo con Telegram lo guarda Apps Script en su propia Hoja (no en
+// Firestore), así que para saber si un cliente ya está vinculado le
+// preguntamos directo a Apps Script en vez de leerlo de su perfil.
+let telegramLinked = false;
+function verificarTelegramVinculado(){
+  if(!currentUser) { telegramLinked = false; return Promise.resolve(false); }
+  return fetch(`${WEBAPP_URL}?action=telegramVinculado&uid=${encodeURIComponent(currentUser.uid)}`)
+    .then(r => r.json())
+    .then(res => { telegramLinked = !!res.linked; return telegramLinked; })
+    .catch(() => telegramLinked);
 }
 
 /* =========================================================
@@ -1400,7 +1412,7 @@ btnReservar.addEventListener("click", () => {
       slotsWrap.style.display = "none";
       diaInfo.style.display = "none";
       confirmCard.style.display = "block";
-      refreshTelegramUI();
+      verificarTelegramVinculado().then(() => refreshTelegramUI());
       confirmCard.scrollIntoView({behavior:"smooth", block:"start"});
 
       // Aviso hacia afuera (Telegram + correo), EN SEGUNDO PLANO:
@@ -1438,7 +1450,7 @@ function refreshTelegramUI(){
   if(!wrap) return;
   if(confirmCard.style.display === "none") return; // solo aplica si la tarjeta de confirmación está visible
   wrap.innerHTML = "";
-  if(currentProfile && currentProfile.telegramChatId){
+  if(telegramLinked){
     const ok = document.createElement("div");
     ok.className = "telegram-ok";
     ok.textContent = "✓ Ya tienes activados tus recordatorios por Telegram.";
@@ -1452,6 +1464,14 @@ function refreshTelegramUI(){
     wrap.appendChild(a);
   }
 }
+
+// Cuando el cliente vuelve a la pestaña después de haber ido a Telegram
+// a darle "start" al bot, volvemos a preguntar si ya quedó vinculado.
+document.addEventListener("visibilitychange", () => {
+  if(document.visibilityState === "visible" && currentUser && confirmCard.style.display !== "none"){
+    verificarTelegramVinculado().then(() => refreshTelegramUI());
+  }
+});
 
 /* =========================================================
    VISTA BARBERO

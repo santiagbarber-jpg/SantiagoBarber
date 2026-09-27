@@ -214,6 +214,26 @@
   .service-option .name{font-weight:700; font-size:14px; color:var(--cream);}
   .service-option .price{font-family:'Bebas Neue'; font-size:19px; color:var(--brass-bright); letter-spacing:0.02em;}
 
+  .dias-scroll{
+    display:flex; gap:8px; overflow-x:auto; padding-bottom:6px;
+    -webkit-overflow-scrolling:touch; scroll-snap-type:x proximity;
+  }
+  .dias-scroll::-webkit-scrollbar{height:5px;}
+  .dias-scroll::-webkit-scrollbar-thumb{background:var(--line); border-radius:10px;}
+  .day-card{
+    flex:0 0 auto; min-width:62px; padding:10px 6px; border-radius:12px;
+    border:1px solid var(--line); background:var(--panel-2); text-align:center;
+    cursor:pointer; scroll-snap-align:start; transition:transform .1s ease;
+  }
+  .day-card:active{transform:scale(0.96);}
+  .day-card .dow{font-size:10.5px; text-transform:uppercase; color:var(--cream-dim); font-weight:700; letter-spacing:0.03em;}
+  .day-card .num{font-family:'Bebas Neue'; font-size:21px; color:var(--cream); line-height:1.05; margin-top:2px;}
+  .day-card .estado{font-size:9.5px; color:var(--brass); margin-top:4px; font-weight:700; white-space:nowrap;}
+  .day-card.selected{background:var(--brass); border-color:var(--brass);}
+  .day-card.selected .dow, .day-card.selected .num, .day-card.selected .estado{color:#181410;}
+  .day-card.closed, .day-card.nocupos{opacity:0.42; cursor:not-allowed; border-style:dashed;}
+  .day-card.closed:active, .day-card.nocupos:active{transform:none;}
+
   .slots{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:10px;}
   .slot{
     padding:12px 6px; border-radius:10px; border:1px solid var(--line);
@@ -504,8 +524,9 @@
       <div id="serviciosWrap" class="services-wrap"></div>
 
       <div id="fechaSection" style="display:none;">
-        <label for="fecha">Elige el día</label>
-        <input type="date" id="fecha" autocomplete="off" disabled>
+        <label>Elige día y hora</label>
+        <div id="diasScroll" class="dias-scroll"></div>
+        <input type="hidden" id="fecha">
         <div id="diaInfo" class="day-note" style="display:none;"></div>
         <div id="cerradoMsg" class="closed-msg" style="display:none;"></div>
 
@@ -1079,6 +1100,7 @@ function detenerEscuchaFirestore(){
 }
 
 function onDatosActualizados(){
+  renderDiasScroll();
   if(fechaInput && fechaInput.value){
     renderClientDay();
   }
@@ -1218,6 +1240,7 @@ function renderServicios(){
    VISTA CLIENTE — FECHA / HORA / FORMULARIO
    ========================================================= */
 const fechaInput = document.getElementById("fecha");
+const diasScroll = document.getElementById("diasScroll");
 const diaInfo = document.getElementById("diaInfo");
 const cerradoMsg = document.getElementById("cerradoMsg");
 const slotsWrap = document.getElementById("slotsWrap");
@@ -1228,7 +1251,6 @@ const celularInput = document.getElementById("celular");
 const btnReservar = document.getElementById("btnReservar");
 const confirmCard = document.getElementById("confirmCard");
 
-fechaInput.min = todayStr();
 nombreInput.addEventListener("input", updateButtonState);
 celularInput.addEventListener("input", updateButtonState);
 
@@ -1236,6 +1258,7 @@ let selectedSlot = null;
 
 function resetClientView(){
   fechaInput.value = "";
+  selectedDateStr = null;
   if(!currentUser){
     nombreInput.value = "";
     celularInput.value = "";
@@ -1249,13 +1272,81 @@ function resetClientView(){
   cerradoMsg.style.display = "none";
   fechaSection.style.display = "none";
   renderServicios();
+  renderDiasScroll();
   if(currentUser && currentProfile) applyProfileToForm();
 }
 window.addEventListener("pageshow", resetClientView);
 
-fechaInput.addEventListener("change", () => {
+/* ---- Franja de 30 días con cupos libres / cerrado ---- */
+let selectedDateStr = null;
+
+function contarLibres(dateStr){
+  const all = generateSlots(dateStr);
+  if(all.length === 0) return 0;
+  const taken = CITAS.filter(a => a.date === dateStr).map(a => a.minutes);
+  const bloqueadas = HORAS_BLOQUEADAS.filter(h => h.date === dateStr).map(h => h.minutes);
+  const isToday = dateStr === todayStr();
+  const now = new Date();
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  let libres = 0;
+  all.forEach(min => {
+    if(taken.includes(min) || bloqueadas.includes(min)) return;
+    if(isToday && min <= nowMinutes) return;
+    libres++;
+  });
+  return libres;
+}
+
+function estadoDia(dateStr){
+  const day = dateFromStr(dateStr).getDay();
+  const blocked = isBlocked(dateStr);
+  const martesCerrado = (day === 2) && !esMartesAbierto(dateStr);
+  if(blocked || martesCerrado) return { cerrado: true, libres: 0 };
+  return { cerrado: false, libres: contarLibres(dateStr) };
+}
+
+function renderDiasScroll(){
+  if(!diasScroll) return;
+  if(!dataLoaded){
+    diasScroll.innerHTML = '<div class="day-note" style="margin:0;">Cargando disponibilidad…</div>';
+    return;
+  }
+  diasScroll.innerHTML = "";
+  const hoy = new Date();
+  hoy.setHours(0,0,0,0);
+
+  for(let i = 0; i < 30; i++){
+    const d = new Date(hoy);
+    d.setDate(d.getDate() + i);
+    const dateStr = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+    const estado = estadoDia(dateStr);
+    const sinCupos = !estado.cerrado && estado.libres <= 0;
+
+    const card = document.createElement("div");
+    card.className = "day-card";
+    if(dateStr === selectedDateStr) card.classList.add("selected");
+    if(estado.cerrado) card.classList.add("closed");
+    else if(sinCupos) card.classList.add("nocupos");
+
+    const dow = i === 0 ? "Hoy" : DIAS_ABREV[d.getDay()];
+    const numLabel = d.getDate() === 1 ? `${d.getDate()} ${MESES_ABREV[d.getMonth()]}` : String(d.getDate());
+    const estadoLabel = estado.cerrado ? "cerrado" : (estado.libres > 0 ? `${estado.libres} libres` : "sin cupos");
+
+    card.innerHTML = `<div class="dow">${dow}</div><div class="num">${numLabel}</div><div class="estado">${estadoLabel}</div>`;
+
+    if(!estado.cerrado && !sinCupos){
+      card.addEventListener("click", () => seleccionarDia(dateStr));
+    }
+    diasScroll.appendChild(card);
+  }
+}
+
+function seleccionarDia(dateStr){
+  selectedDateStr = dateStr;
+  fechaInput.value = dateStr;
+  renderDiasScroll();
   renderClientDay();
-});
+}
 
 function renderClientDay(){
   const dateStr = fechaInput.value;

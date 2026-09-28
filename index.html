@@ -644,9 +644,10 @@
 
       <div class="card">
         <h2>Resumen de citas <span class="tag">Barbero</span></h2>
-        <label for="filtroFechaCitas">Ver las citas de este día</label>
-        <input type="date" id="filtroFechaCitas">
-        <button class="secondary" id="btnVerTodasCitas" style="margin-bottom:10px;">Ver todas (sin filtro)</button>
+        <label>Ver las citas de este día</label>
+        <div id="diasScrollBarbero" class="dias-scroll"></div>
+        <input type="hidden" id="filtroFechaCitas">
+        <button class="secondary" id="btnVerTodasCitas" style="margin:4px 0 10px;">Ver todas (sin filtro)</button>
         <div id="listaCitas"></div>
       </div>
 
@@ -1611,6 +1612,7 @@ function refreshBarberPanel(){
   if(!esBarbero()) return;
   checkForNewCitas();
   renderStats();
+  renderDiasBarbero();
   renderListaCitas();
   renderBloqueos();
   renderMartes();
@@ -1713,15 +1715,50 @@ document.getElementById("listaCitas").addEventListener("change", (e) => {
 });
 
 const filtroFechaCitas = document.getElementById("filtroFechaCitas");
-filtroFechaCitas.min = todayStr();
-filtroFechaCitas.value = todayStr();
+filtroFechaCitas.value = todayStr(); // al entrar, muestra el día de hoy
+const diasScrollBarbero = document.getElementById("diasScrollBarbero");
 
-filtroFechaCitas.addEventListener("change", () => {
-  renderListaCitas();
-});
+// Franja de 30 días del panel del barbero: en vez de cupos libres muestra
+// cuántas citas pendientes tiene cada día (el mismo número que ve en la
+// lista de abajo), y se actualiza en vivo con Firestore.
+function renderDiasBarbero(){
+  if(!diasScrollBarbero) return;
+  diasScrollBarbero.innerHTML = "";
+  const hoy = new Date();
+  hoy.setHours(0,0,0,0);
+
+  for(let i = 0; i < 30; i++){
+    const d = new Date(hoy);
+    d.setDate(d.getDate() + i);
+    const dateStr = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+
+    const cantidad = CITAS.filter(a => a.date === dateStr && getStatus(a) !== "realizada").length;
+    const cerrado = estadoDia(dateStr).cerrado;
+
+    const card = document.createElement("div");
+    card.className = "day-card";
+    if(dateStr === filtroFechaCitas.value) card.classList.add("selected");
+    if(cerrado && cantidad === 0) card.classList.add("closed");
+
+    const dow = i === 0 ? "Hoy" : DIAS_ABREV[d.getDay()];
+    const numLabel = d.getDate() === 1 ? `${d.getDate()} ${MESES_ABREV[d.getMonth()]}` : String(d.getDate());
+    let estadoLabel;
+    if(cantidad > 0) estadoLabel = cantidad === 1 ? "1 cita" : `${cantidad} citas`;
+    else estadoLabel = cerrado ? "cerrado" : "0 citas";
+
+    card.innerHTML = `<div class="dow">${dow}</div><div class="num">${numLabel}</div><div class="estado">${estadoLabel}</div>`;
+    card.addEventListener("click", () => {
+      filtroFechaCitas.value = dateStr;
+      renderDiasBarbero();
+      renderListaCitas();
+    });
+    diasScrollBarbero.appendChild(card);
+  }
+}
 
 document.getElementById("btnVerTodasCitas").addEventListener("click", () => {
   filtroFechaCitas.value = "";
+  renderDiasBarbero();
   renderListaCitas();
 });
 

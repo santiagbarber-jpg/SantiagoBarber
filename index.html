@@ -204,6 +204,16 @@
   }
 
   .services-wrap{margin-bottom:4px;}
+  .ok-banner{
+    align-items:center; gap:12px; padding:16px; border-radius:12px;
+    background:rgba(111,174,116,0.14); border:1px solid rgba(111,174,116,0.5);
+    color:#b8e0bb; font-weight:700; font-size:15px; line-height:1.35;
+  }
+  .ok-banner .ok-check{
+    width:36px; height:36px; border-radius:50%; background:var(--green); color:#0e1a0d;
+    display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0;
+  }
+  .ok-banner small{display:block; font-weight:500; font-size:12px; color:var(--cream-dim); margin-top:3px;}
   .service-option{
     display:flex; justify-content:space-between; align-items:center; gap:10px;
     background:var(--panel-2); border:1px solid var(--line); border-radius:10px;
@@ -520,8 +530,12 @@
     <div class="card locked" id="reservaCard">
       <h2>Reservar cita <span class="tag">Cliente</span></h2>
 
-      <label>Elige el servicio</label>
-      <div id="serviciosWrap" class="services-wrap"></div>
+      <div id="reservaOkBanner" class="ok-banner" style="display:none;"></div>
+
+      <div id="servicioSection">
+        <label>Elige el servicio</label>
+        <div id="serviciosWrap" class="services-wrap"></div>
+      </div>
 
       <div id="fechaSection" style="display:none;">
         <label>Elige día y hora</label>
@@ -1271,6 +1285,8 @@ function resetClientView(){
   diaInfo.style.display = "none";
   cerradoMsg.style.display = "none";
   fechaSection.style.display = "none";
+  document.getElementById("reservaOkBanner").style.display = "none";
+  document.getElementById("servicioSection").style.display = "block";
   renderServicios();
   renderDiasScroll();
   if(currentUser && currentProfile) applyProfileToForm();
@@ -1502,9 +1518,24 @@ btnReservar.addEventListener("click", () => {
       formWrap.style.display = "none";
       slotsWrap.style.display = "none";
       diaInfo.style.display = "none";
+      cerradoMsg.style.display = "none";
+
+      // Anuncio dentro del panel de reservas + se esconde todo lo de elegir
+      const banner = document.getElementById("reservaOkBanner");
+      banner.innerHTML = `<div class="ok-check">✓</div><div>¡Tu cita ha sido confirmada!<small>${escapeHtml(prettyDate(cita.date))} · ${escapeHtml(cita.time)} — ${escapeHtml(cita.service.name)}</small></div>`;
+      banner.style.display = "flex";
+      document.getElementById("servicioSection").style.display = "none";
+      fechaSection.style.display = "none";
+
+      // Limpiamos la selección: así los avisos en vivo de Firestore ya no
+      // vuelven a dibujar el día ni esconden la tarjeta de confirmación.
+      fechaInput.value = "";
+      selectedDateStr = null;
+      selectedSlot = null;
+
       confirmCard.style.display = "block";
       verificarTelegramVinculado().then(() => refreshTelegramUI());
-      confirmCard.scrollIntoView({behavior:"smooth", block:"start"});
+      document.getElementById("reservaCard").scrollIntoView({behavior:"smooth", block:"start"});
 
       // Aviso hacia afuera (Telegram + correo), EN SEGUNDO PLANO:
       // si esto falla, no le afecta nada al cliente, su cita ya

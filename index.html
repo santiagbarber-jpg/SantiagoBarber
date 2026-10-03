@@ -214,6 +214,14 @@
     display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0;
   }
   .ok-banner small{display:block; font-weight:500; font-size:12px; color:var(--cream-dim); margin-top:3px;}
+
+  .client-citas-banner{
+    margin-bottom:16px; padding:14px 16px; border-radius:12px;
+    background:var(--panel-2); border:1px solid var(--line);
+  }
+  .ccb-title{font-family:'Bebas Neue'; font-size:19px; color:var(--brass-bright); letter-spacing:0.02em;}
+  .ccb-list{margin:8px 0 0; padding-left:18px; font-size:13px; color:var(--cream); line-height:1.65;}
+  .ccb-note{font-size:12px; color:var(--cream-dim); margin-top:10px; line-height:1.5;}
   .service-option{
     display:flex; justify-content:space-between; align-items:center; gap:10px;
     background:var(--panel-2); border:1px solid var(--line); border-radius:10px;
@@ -323,23 +331,28 @@
     padding:12px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:10px;
     flex-wrap:wrap;
   }
-  .appt-item .info b{display:block; font-size:14px; color:var(--cream);}
-  .appt-item .info span{font-size:12px; color:var(--cream-dim);}
-  .appt-item .right{display:flex; flex-direction:column; align-items:flex-end; gap:6px;}
-  .appt-item .when{font-size:12px; color:var(--brass); font-weight:700; white-space:nowrap; text-align:right;}
+  .appt-item .info{flex:1; min-width:160px;}
+  .appt-item .info .top{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .appt-item .info b{font-size:14.5px; color:var(--cream);}
+  .appt-item .meta{display:block; font-size:11.5px; color:var(--cream-dim); margin-top:4px; line-height:1.6;}
+  .appt-item .meta span{margin-right:10px; white-space:nowrap; display:inline-block;}
+  .appt-item .actions{display:flex; gap:6px; align-items:center;}
+  .icon-btn{
+    width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    border:1px solid var(--line); background:var(--panel); cursor:pointer; font-size:15px; flex-shrink:0;
+  }
+  .icon-btn.ok{background:rgba(111,174,116,0.14); color:#8fd98f; border-color:rgba(111,174,116,0.4);}
+  .icon-btn.no{background:rgba(163,70,56,0.14); color:#e79c86; border-color:rgba(163,70,56,0.4);}
+  .icon-btn.wa{background:#25D366; color:#fff; border:none;}
+  .icon-btn:active{transform:scale(0.92);}
   .badge{
     font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em;
     padding:3px 9px; border-radius:20px; white-space:nowrap;
   }
   .badge.pendiente{background:rgba(198,201,205,0.16); color:var(--brass-bright); border:1px solid rgba(198,201,205,0.4);}
-  .badge.realizada{background:rgba(95,143,91,0.16); color:#9fce9a; border:1px solid rgba(95,143,91,0.4);}
+  .badge.confirmada{background:rgba(95,143,91,0.16); color:#9fce9a; border:1px solid rgba(95,143,91,0.4);}
   .badge.retrasada{background:rgba(163,70,56,0.18); color:#e79c86; border:1px solid rgba(163,70,56,0.55);}
-  select.badge-select{
-    -webkit-appearance:none; appearance:none; font-family:'Inter'; cursor:pointer;
-    padding-right:22px;
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%23e3e5e7'/></svg>");
-    background-repeat:no-repeat; background-position:right 8px center;
-  }
+  .badge.cancelada{background:rgba(120,116,108,0.2); color:#b9b2a4; border:1px solid rgba(120,116,108,0.5);}
   .group-title{
     font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:var(--brass);
     font-weight:700; margin:16px 0 8px;
@@ -530,6 +543,8 @@
     <div class="card locked" id="reservaCard">
       <h2>Reservar cita <span class="tag">Cliente</span></h2>
 
+      <div id="citasClienteBanner" class="client-citas-banner" style="display:none;"></div>
+
       <div id="reservaOkBanner" class="ok-banner" style="display:none;"></div>
 
       <div id="servicioSection">
@@ -646,6 +661,7 @@
         <h2>Resumen de citas <span class="tag">Barbero</span></h2>
         <label>Ver las citas de este día</label>
         <div id="diasScrollBarbero" class="dias-scroll"></div>
+        <div id="habilitarDiaWrap"></div>
         <input type="hidden" id="filtroFechaCitas">
         <button class="secondary" id="btnVerTodasCitas" style="margin:4px 0 10px;">Ver todas (sin filtro)</button>
         <div id="listaCitas"></div>
@@ -675,12 +691,12 @@
       </div>
 
       <div class="card">
-        <h2>Martes especiales</h2>
-        <div class="small-note">Los martes están cerrados por defecto. Si necesitas abrir un martes puntual (mismo horario que lunes/miércoles), agrégalo aquí.</div>
-        <label for="martesFecha">Fecha (debe ser un martes)</label>
-        <input type="date" id="martesFecha">
-        <button class="primary" id="btnAbrirMartes">Abrir este martes</button>
-        <div id="listaMartes" style="margin-top:16px;"></div>
+        <h2>Días habilitados</h2>
+        <div class="small-note">Los martes y los festivos colombianos (todos, calculados automáticamente cada año) están cerrados por defecto. Si necesitas abrir uno puntual, agrégalo aquí — usa el horario normal de ese día de la semana.</div>
+        <label for="habilitarFecha">Fecha a habilitar (debe ser un martes o un festivo)</label>
+        <input type="date" id="habilitarFecha">
+        <button class="primary" id="btnHabilitarDia">Habilitar este día</button>
+        <div id="listaHabilitados" style="margin-top:16px;"></div>
       </div>
 
       <div class="card">
@@ -781,10 +797,91 @@ const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp);
 const db = getFirestore(fbApp);
 
+/* =========================================================
+   FESTIVOS DE COLOMBIA (calculados, no hay que tocarlos cada año)
+   ---------------------------------------------------------
+   - Domingo de Pascua: algoritmo de Meeus/Jones/Butcher.
+   - Jueves y Viernes Santo: fijos respecto a la Pascua, NO se trasladan.
+   - Los demás festivos "móviles" se trasladan al lunes siguiente si no
+     caen en lunes (Ley Emiliani, Ley 51 de 1983).
+   ========================================================= */
+function ymd(d){ return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
+
+function domingoPascua(year){
+  const a = year % 19;
+  const b = Math.floor(year / 100);
+  const c = year % 100;
+  const d = Math.floor(b / 4);
+  const e = b % 4;
+  const f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3);
+  const h = (19*a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4);
+  const k = c % 4;
+  const l = (32 + 2*e + 2*i - h - k) % 7;
+  const m = Math.floor((a + 11*h + 22*l) / 451);
+  const mes = Math.floor((h + l - 7*m + 114) / 31);
+  const dia = ((h + l - 7*m + 114) % 31) + 1;
+  return new Date(year, mes - 1, dia);
+}
+
+function proximoLunes(date){
+  const d = new Date(date);
+  if(d.getDay() === 1) return d;
+  d.setDate(d.getDate() + ((8 - d.getDay()) % 7));
+  return d;
+}
+
+function festivosColombia(year){
+  const lista = [];
+  const add = (d, nombre) => lista.push({ date: ymd(d), nombre });
+
+  add(new Date(year,0,1), "Año Nuevo");
+  add(new Date(year,4,1), "Día del Trabajo");
+  add(new Date(year,6,20), "Independencia de Colombia");
+  add(new Date(year,7,7), "Batalla de Boyacá");
+  add(new Date(year,11,8), "Inmaculada Concepción");
+  add(new Date(year,11,25), "Navidad");
+
+  const pascua = domingoPascua(year);
+  const juevesSanto = new Date(pascua); juevesSanto.setDate(pascua.getDate() - 3);
+  const viernesSanto = new Date(pascua); viernesSanto.setDate(pascua.getDate() - 2);
+  add(juevesSanto, "Jueves Santo");
+  add(viernesSanto, "Viernes Santo");
+
+  add(proximoLunes(new Date(year,0,6)), "Reyes Magos");
+  add(proximoLunes(new Date(year,2,19)), "San José");
+  const ascension = new Date(pascua); ascension.setDate(pascua.getDate() + 39);
+  add(proximoLunes(ascension), "Ascensión del Señor");
+  const corpus = new Date(pascua); corpus.setDate(pascua.getDate() + 60);
+  add(proximoLunes(corpus), "Corpus Christi");
+  const sagradoCorazon = new Date(pascua); sagradoCorazon.setDate(pascua.getDate() + 68);
+  add(proximoLunes(sagradoCorazon), "Sagrado Corazón");
+  add(proximoLunes(new Date(year,5,29)), "San Pedro y San Pablo");
+  add(proximoLunes(new Date(year,7,15)), "Asunción de la Virgen");
+  add(proximoLunes(new Date(year,9,12)), "Día de la Raza");
+  add(proximoLunes(new Date(year,10,1)), "Todos los Santos");
+  add(proximoLunes(new Date(year,10,11)), "Independencia de Cartagena");
+
+  return lista;
+}
+
+function construirFestivos(){
+  const hoy = new Date();
+  const mapa = {};
+  [hoy.getFullYear(), hoy.getFullYear() + 1].forEach(y => {
+    festivosColombia(y).forEach(f => { mapa[f.date] = f.nombre; });
+  });
+  return mapa;
+}
+const FESTIVOS = construirFestivos();
+function esFestivo(dateStr){ return !!FESTIVOS[dateStr]; }
+function nombreFestivo(dateStr){ return FESTIVOS[dateStr] || ""; }
+
 const SCHEDULE = {
   // Lunes: 8:40am - 1:00pm (última antes de almuerzo), receso hasta 2:00pm, tarde 2:00pm - 7:20pm
   1: {blocks: [{start: 8*60+40, end: 13*60}, {start: 14*60, end: 19*60+20}]},
-  // Martes: cerrado por defecto (ver MARTES_ESPECIALES más abajo). A propósito no tiene entrada aquí.
+  // Martes: cerrado por defecto (ver DIAS_HABILITADOS más abajo). A propósito no tiene entrada aquí.
   // Miércoles: igual que el lunes
   3: {blocks: [{start: 8*60+40, end: 13*60}, {start: 14*60, end: 19*60+20}]},
   // Jueves: 10:20am - 1:20pm, receso hasta 2:20pm, tarde 2:20pm - 8:20pm
@@ -945,6 +1042,7 @@ onAuthStateChanged(auth, (user) => {
     iniciarEscuchaFirestore();
     actualizarAccesoBarbero();
     verificarTelegramVinculado().then(() => refreshTelegramUI());
+    renderCitasClienteBanner();
   }else{
     currentProfile = null;
     telegramLinked = false;
@@ -1038,7 +1136,7 @@ document.getElementById("btnSalirPanel").addEventListener("click", () => {
 let CITAS = [];
 let BLOQUEOS = [];
 let HORAS_BLOQUEADAS = [];
-let MARTES_ESPECIALES = [];
+let DIAS_HABILITADOS = [];
 let dataLoaded = false;
 
 /* =========================================================
@@ -1099,8 +1197,8 @@ function iniciarEscuchaFirestore(){
     onDatosActualizados();
   });
 
-  unsubMartes = onSnapshot(collection(db, "martesEspeciales"), (snap) => {
-    MARTES_ESPECIALES = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  unsubMartes = onSnapshot(collection(db, "diasHabilitados"), (snap) => {
+    DIAS_HABILITADOS = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     onDatosActualizados();
   });
 }
@@ -1110,12 +1208,13 @@ function detenerEscuchaFirestore(){
   if(unsubBloqueosDias){ unsubBloqueosDias(); unsubBloqueosDias = null; }
   if(unsubBloqueosHoras){ unsubBloqueosHoras(); unsubBloqueosHoras = null; }
   if(unsubMartes){ unsubMartes(); unsubMartes = null; }
-  CITAS = []; BLOQUEOS = []; HORAS_BLOQUEADAS = []; MARTES_ESPECIALES = [];
+  CITAS = []; BLOQUEOS = []; HORAS_BLOQUEADAS = []; DIAS_HABILITADOS = [];
   dataLoaded = false;
 }
 
 function onDatosActualizados(){
   renderDiasScroll();
+  renderCitasClienteBanner();
   if(fechaInput && fechaInput.value){
     renderClientDay();
   }
@@ -1159,8 +1258,20 @@ function isBlocked(dateStr){
   return BLOQUEOS.find(b => b.date === dateStr);
 }
 
-function esMartesAbierto(dateStr){
-  return MARTES_ESPECIALES.some(m => m.date === dateStr);
+function estaHabilitado(dateStr){
+  return DIAS_HABILITADOS.some(m => m.date === dateStr);
+}
+
+// Un día está "cerrado por defecto" si es martes o si es un festivo
+// colombiano — salvo que el barbero lo haya habilitado puntualmente.
+function cerradoPorDefecto(dateStr){
+  const day = dateFromStr(dateStr).getDay();
+  return day === 2 || esFestivo(dateStr);
+}
+
+function motivoCerrado(dateStr){
+  if(esFestivo(dateStr)) return `Festivo: ${nombreFestivo(dateStr)}`;
+  return "Martes (cerrado por defecto)";
 }
 
 function prettyDate(dateStr){
@@ -1175,9 +1286,12 @@ function shortDateLabel(dateStr){
 
 function generateSlots(dateStr){
   const day = dateFromStr(dateStr).getDay();
-  let sched = SCHEDULE[day];
-  if(day === 2){
-    sched = esMartesAbierto(dateStr) ? MARTES_SCHEDULE_EXCEPCION : null;
+  let sched;
+  if(cerradoPorDefecto(dateStr)){
+    if(!estaHabilitado(dateStr)) return [];
+    sched = (day === 2) ? MARTES_SCHEDULE_EXCEPCION : SCHEDULE[day];
+  }else{
+    sched = SCHEDULE[day];
   }
   if(!sched) return [];
   const slots = [];
@@ -1208,8 +1322,33 @@ function citasFuturasDelCliente(){
     .sort((a,b) => apptDateTime(a) - apptDateTime(b));
 }
 
+function renderCitasClienteBanner(){
+  const banner = document.getElementById("citasClienteBanner");
+  if(!banner) return;
+  const futuras = citasFuturasDelCliente();
+  if(!currentUser || futuras.length === 0){
+    banner.style.display = "none";
+    banner.innerHTML = "";
+    return;
+  }
+  const items = futuras.map(a => {
+    const srv = a.service && a.service.name ? ` — ${escapeHtml(a.service.name)}` : "";
+    return `<li>${escapeHtml(prettyDate(a.date))}, ${escapeHtml(a.time)}${srv}</li>`;
+  }).join("");
+  const titulo = futuras.length === 1 ? "Ya tienes 1 cita agendada" : `Ya tienes ${futuras.length} citas agendadas`;
+  const mensajeWa = encodeURIComponent("Hola, quiero cambiar o cancelar mi cita.");
+  banner.innerHTML = `
+    <div class="ccb-title">${titulo}</div>
+    <ul class="ccb-list">${items}</ul>
+    <div class="ccb-note">Si quieres otra cita, completa el formulario de abajo. Para cambiar o cancelar una, escríbenos por WhatsApp.</div>
+    <a class="whatsapp-btn" style="margin-top:10px;" target="_blank" href="https://wa.me/${BARBER_WHATSAPP}?text=${mensajeWa}"><span>Escribir por WhatsApp</span></a>
+  `;
+  banner.style.display = "block";
+}
+
 function getStatus(a){
-  if(a.status === "realizada") return "realizada";
+  if(a.status === "cancelada") return "cancelada";
+  if(a.status === "confirmada") return "confirmada";
   if(apptDateTime(a) < new Date()) return "retrasada";
   return a.status || "pendiente";
 }
@@ -1290,6 +1429,7 @@ function resetClientView(){
   document.getElementById("servicioSection").style.display = "block";
   renderServicios();
   renderDiasScroll();
+  renderCitasClienteBanner();
   if(currentUser && currentProfile) applyProfileToForm();
 }
 window.addEventListener("pageshow", resetClientView);
@@ -1300,7 +1440,7 @@ let selectedDateStr = null;
 function contarLibres(dateStr){
   const all = generateSlots(dateStr);
   if(all.length === 0) return 0;
-  const taken = CITAS.filter(a => a.date === dateStr).map(a => a.minutes);
+  const taken = CITAS.filter(a => a.date === dateStr && a.status !== "cancelada").map(a => a.minutes);
   const bloqueadas = HORAS_BLOQUEADAS.filter(h => h.date === dateStr).map(h => h.minutes);
   const isToday = dateStr === todayStr();
   const now = new Date();
@@ -1315,10 +1455,9 @@ function contarLibres(dateStr){
 }
 
 function estadoDia(dateStr){
-  const day = dateFromStr(dateStr).getDay();
   const blocked = isBlocked(dateStr);
-  const martesCerrado = (day === 2) && !esMartesAbierto(dateStr);
-  if(blocked || martesCerrado) return { cerrado: true, libres: 0 };
+  const cerradoDefault = cerradoPorDefecto(dateStr) && !estaHabilitado(dateStr);
+  if(blocked || cerradoDefault) return { cerrado: true, libres: 0 };
   return { cerrado: false, libres: contarLibres(dateStr) };
 }
 
@@ -1384,22 +1523,25 @@ function renderClientDay(){
 
   const day = dateFromStr(dateStr).getDay();
   const blocked = isBlocked(dateStr);
-  const martesCerrado = (day === 2) && !esMartesAbierto(dateStr);
+  const cerradoDefault = cerradoPorDefecto(dateStr) && !estaHabilitado(dateStr);
 
-  if(blocked || martesCerrado){
+  if(blocked || cerradoDefault){
     cerradoMsg.style.display = "block";
     cerradoMsg.innerHTML = "";
     if(blocked){
       cerradoMsg.textContent = `La barbería no atiende este día${blocked.reason ? " — " + blocked.reason : ""}. Elige otra fecha.`;
     }else{
+      const esFest = esFestivo(dateStr);
       const p = document.createElement("div");
-      p.textContent = "Los martes no atendemos. Si es urgente, escríbenos por WhatsApp.";
+      p.textContent = esFest
+        ? `Hoy es festivo (${nombreFestivo(dateStr)}) y no atendemos. Si es urgente, escríbenos por WhatsApp.`
+        : "Los martes no atendemos. Si es urgente, escríbenos por WhatsApp.";
       cerradoMsg.appendChild(p);
       const wa = document.createElement("a");
       wa.className = "whatsapp-btn";
       wa.target = "_blank";
       wa.style.marginTop = "12px";
-      wa.href = `https://wa.me/${BARBER_WHATSAPP}?text=${encodeURIComponent("Hola! Necesito un turno un martes, ¿tienen disponibilidad?")}`;
+      wa.href = `https://wa.me/${BARBER_WHATSAPP}?text=${encodeURIComponent("Hola! Necesito un turno ese día, ¿tienen disponibilidad?")}`;
       wa.innerHTML = `<span>Escribir por WhatsApp</span>`;
       cerradoMsg.appendChild(wa);
     }
@@ -1407,7 +1549,7 @@ function renderClientDay(){
   }
 
   let schedForText = SCHEDULE[day];
-  if(day === 2) schedForText = MARTES_SCHEDULE_EXCEPCION;
+  if(cerradoPorDefecto(dateStr) && day === 2) schedForText = MARTES_SCHEDULE_EXCEPCION;
 
   diaInfo.style.display = "block";
   let horarioTexto = "sin horario";
@@ -1427,7 +1569,7 @@ function renderClientDay(){
 
 function renderSlots(dateStr){
   const allSlots = generateSlots(dateStr);
-  const taken = CITAS.filter(a => a.date === dateStr).map(a => a.minutes);
+  const taken = CITAS.filter(a => a.date === dateStr && a.status !== "cancelada").map(a => a.minutes);
   const horasBloqueadas = HORAS_BLOQUEADAS.filter(h => h.date === dateStr).map(h => h.minutes);
 
   const isToday = dateStr === todayStr();
@@ -1501,7 +1643,7 @@ btnReservar.addEventListener("click", () => {
       transaction.get(diaRef),
       transaction.get(horaRef)
     ]).then(([citaSnap, diaSnap, horaSnap]) => {
-      if(citaSnap.exists()) throw new Error("OCUPADO");
+      if(citaSnap.exists() && citaSnap.data().status !== "cancelada") throw new Error("OCUPADO");
       if(diaSnap.exists()) throw new Error("DIA_BLOQUEADO");
       if(horaSnap.exists()) throw new Error("HORA_BLOQUEADA");
       transaction.set(citaRef, cita);
@@ -1613,9 +1755,10 @@ function refreshBarberPanel(){
   checkForNewCitas();
   renderStats();
   renderDiasBarbero();
+  renderHabilitarDiaWrap();
   renderListaCitas();
   renderBloqueos();
-  renderMartes();
+  renderDiasHabilitados();
   renderHorasBloqueadas();
 }
 
@@ -1640,11 +1783,26 @@ function serviceLabel(a){
   return a.service && a.service.name ? a.service.name : "—";
 }
 
+function badgeLabel(status){
+  if(status === "confirmada") return "Confirmada";
+  if(status === "cancelada") return "Cancelada";
+  if(status === "retrasada") return "Retrasada";
+  return "Pendiente";
+}
+
+function telefonoWhatsapp(phone){
+  let digits = (phone || "").replace(/\D/g, "");
+  if(digits.length === 10 && digits.startsWith("3")) digits = "57" + digits;
+  return digits;
+}
+
+const WA_ICON_SMALL = `<svg viewBox="0 0 32 32" width="16" height="16" aria-hidden="true"><path fill="#fff" d="M16 3C9.096 3 3.5 8.596 3.5 15.5c0 2.38.664 4.61 1.816 6.51L3 29l7.16-2.276A12.44 12.44 0 0 0 16 28c6.904 0 12.5-5.596 12.5-12.5S22.904 3 16 3zm0 22.727a10.19 10.19 0 0 1-5.19-1.42l-.372-.222-4.25 1.352 1.375-4.144-.242-.386A10.19 10.19 0 0 1 5.773 15.5C5.773 9.845 10.345 5.273 16 5.273S26.227 9.845 26.227 15.5 21.655 25.727 16 25.727z"/><path fill="#fff" d="M21.62 18.11c-.306-.153-1.81-.893-2.09-.995-.28-.102-.484-.153-.688.154-.204.306-.79.994-.968 1.199-.178.204-.357.23-.663.077-.306-.153-1.293-.477-2.464-1.52-.911-.812-1.526-1.815-1.705-2.121-.178-.306-.019-.472.134-.624.138-.138.306-.357.459-.536.153-.178.204-.306.306-.51.102-.204.051-.383-.026-.536-.077-.153-.688-1.658-.943-2.27-.248-.596-.5-.515-.688-.525-.178-.008-.382-.01-.586-.01-.204 0-.535.077-.816.383-.28.306-1.07 1.046-1.07 2.55 0 1.505 1.096 2.96 1.249 3.164.153.204 2.158 3.295 5.229 4.622.73.315 1.3.503 1.744.644.733.233 1.4.2 1.928.121.588-.088 1.81-.74 2.065-1.454.255-.714.255-1.327.178-1.454-.076-.128-.28-.204-.586-.357z"/></svg>`;
+
 function renderListaCitas(){
   const wrap = document.getElementById("listaCitas");
   wrap.innerHTML = "";
 
-  let citasActivas = CITAS.filter(a => getStatus(a) !== "realizada");
+  let citasActivas = CITAS.filter(a => !["confirmada","cancelada"].includes(getStatus(a)));
 
   const filtroFecha = filtroFechaCitas.value;
   if(filtroFecha){
@@ -1654,7 +1812,7 @@ function renderListaCitas(){
   if(citasActivas.length === 0){
     wrap.innerHTML = filtroFecha
       ? `<div class="empty">No hay citas pendientes para el ${prettyDate(filtroFecha)}.</div>`
-      : '<div class="empty">No hay citas pendientes por atender. Lo ya realizado lo puedes ver en "Buscar histórico".</div>';
+      : '<div class="empty">No hay citas pendientes por atender. Lo ya confirmado o cancelado lo puedes ver en "Buscar histórico".</div>';
     return;
   }
 
@@ -1670,48 +1828,55 @@ function renderListaCitas(){
 
     byDate[dateStr].sort((a,b) => a.minutes - b.minutes).forEach(a => {
       const status = getStatus(a);
+      const precio = a.service && a.service.price ? ` ($${Number(a.service.price).toLocaleString("es-CO")})` : "";
       const item = document.createElement("div");
       item.className = "appt-item";
       item.innerHTML = `
-        <div class="info"><b>${escapeHtml(a.name)}</b><span>${escapeHtml(a.phone)} · ${escapeHtml(serviceLabel(a))}</span></div>
-        <div class="right">
-          <div class="when">${a.time}</div>
-          <select class="badge badge-select ${status}" data-id="${a.id}">
-            <option value="pendiente" ${status === "pendiente" ? "selected" : ""}>Pendiente</option>
-            <option value="retrasada" ${status === "retrasada" ? "selected" : ""}>Retrasada</option>
-            <option value="realizada" ${status === "realizada" ? "selected" : ""}>Realizada</option>
-          </select>
+        <div class="info">
+          <div class="top"><b>${escapeHtml(a.time)} – ${escapeHtml(a.name)}</b><span class="badge ${status}">${badgeLabel(status)}</span></div>
+          <div class="meta">
+            <span>📅 ${escapeHtml(shortDateLabel(a.date))}</span>
+            <span>✂ ${escapeHtml(serviceLabel(a))}${precio}</span>
+            <span>📞 ${escapeHtml(a.phone)}</span>
+          </div>
+        </div>
+        <div class="actions">
+          <div class="icon-btn ok" data-id="${a.id}" data-action="confirmar" title="Marcar confirmada">✓</div>
+          <div class="icon-btn no" data-id="${a.id}" data-action="cancelar" title="Marcar cancelada">✕</div>
+          <a class="icon-btn wa" target="_blank" title="WhatsApp" href="https://wa.me/${telefonoWhatsapp(a.phone)}?text=${encodeURIComponent('Hola ' + a.name + ', te escribo de Santiago Barber sobre tu cita de las ' + a.time + '.')}">${WA_ICON_SMALL}</a>
         </div>
       `;
-      const delBtn = document.createElement("button");
-      delBtn.className = "danger";
-      delBtn.textContent = "Cancelar";
-      delBtn.addEventListener("click", () => {
-        if(confirm(`¿Cancelar la cita de ${a.name} el ${prettyDate(a.date)} a las ${a.time}?`)){
-          delBtn.disabled = true;
-          deleteDoc(doc(db, "citas", a.id))
-            .then(() => {
-              apiPost("cancelarCita", { id: a.id }).catch(() => {});
-            })
-            .catch(() => { alert("No se pudo cancelar. Intenta de nuevo."); delBtn.disabled = false; });
-        }
-      });
-      item.querySelector(".right").appendChild(delBtn);
       wrap.appendChild(item);
     });
   });
 }
 
-document.getElementById("listaCitas").addEventListener("change", (e) => {
-  if(!e.target.classList.contains("badge-select")) return;
-  const id = e.target.dataset.id;
-  const val = e.target.value;
-  e.target.disabled = true;
-  updateDoc(doc(db, "citas", id), { status: val })
+// Chulito = alterna pendiente/confirmada. X = alterna pendiente/cancelada.
+// La cita NUNCA se borra: solo cambia de estado (así el cupo se libera
+// cuando queda "cancelada", pero el registro se conserva).
+document.getElementById("listaCitas").addEventListener("click", (e) => {
+  const btn = e.target.closest(".icon-btn[data-action]");
+  if(!btn) return;
+  const id = btn.dataset.id;
+  const accion = btn.dataset.action;
+  const actual = CITAS.find(c => c.id === id);
+  if(!actual) return;
+  const statusActual = getStatus(actual);
+
+  let nuevoEstado;
+  if(accion === "confirmar"){
+    nuevoEstado = statusActual === "confirmada" ? "pendiente" : "confirmada";
+  }else{
+    nuevoEstado = statusActual === "cancelada" ? "pendiente" : "cancelada";
+  }
+
+  btn.style.pointerEvents = "none";
+  updateDoc(doc(db, "citas", id), { status: nuevoEstado })
     .then(() => {
-      apiPost("actualizarEstado", { id: id, status: val }).catch(() => {});
+      apiPost("actualizarEstado", { id: id, status: nuevoEstado }).catch(() => {});
     })
-    .catch(() => { alert("No se pudo actualizar el estado. Intenta de nuevo."); e.target.disabled = false; });
+    .catch(() => { alert("No se pudo actualizar el estado. Intenta de nuevo."); })
+    .finally(() => { btn.style.pointerEvents = ""; });
 });
 
 const filtroFechaCitas = document.getElementById("filtroFechaCitas");
@@ -1732,7 +1897,7 @@ function renderDiasBarbero(){
     d.setDate(d.getDate() + i);
     const dateStr = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 
-    const cantidad = CITAS.filter(a => a.date === dateStr && getStatus(a) !== "realizada").length;
+    const cantidad = CITAS.filter(a => a.date === dateStr && a.status !== "cancelada").length;
     const cerrado = estadoDia(dateStr).cerrado;
 
     const card = document.createElement("div");
@@ -1751,15 +1916,54 @@ function renderDiasBarbero(){
       filtroFechaCitas.value = dateStr;
       renderDiasBarbero();
       renderListaCitas();
+      renderHabilitarDiaWrap();
     });
     diasScrollBarbero.appendChild(card);
   }
+}
+
+// Si el día seleccionado en el panel del barbero está cerrado por
+// defecto (martes o festivo) y todavía no se habilitó, muestra ahí
+// mismo un botón rápido para habilitarlo sin tener que ir a la otra
+// tarjeta.
+function renderHabilitarDiaWrap(){
+  const wrap = document.getElementById("habilitarDiaWrap");
+  if(!wrap) return;
+  wrap.innerHTML = "";
+  const dateStr = filtroFechaCitas.value;
+  if(!dateStr || !cerradoPorDefecto(dateStr) || estaHabilitado(dateStr)) return;
+
+  const div = document.createElement("div");
+  div.className = "day-note";
+  div.style.margin = "0 0 10px";
+  div.innerHTML = `<b>${escapeHtml(prettyDate(dateStr))}</b> está cerrado (${escapeHtml(motivoCerrado(dateStr))}).`;
+  const btn = document.createElement("button");
+  btn.className = "secondary";
+  btn.style.marginTop = "8px";
+  btn.textContent = "Habilitar este día";
+  btn.addEventListener("click", () => {
+    btn.disabled = true;
+    btn.textContent = "Habilitando…";
+    const nombre = esFestivo(dateStr) ? nombreFestivo(dateStr) : "";
+    setDoc(doc(db, "diasHabilitados", dateStr), { date: dateStr, nombre })
+      .then(() => {
+        apiPost("habilitarDia", { date: dateStr, nombre }).catch(() => {});
+      })
+      .catch(() => {
+        alert("No se pudo habilitar. Intenta de nuevo.");
+        btn.disabled = false;
+        btn.textContent = "Habilitar este día";
+      });
+  });
+  div.appendChild(btn);
+  wrap.appendChild(div);
 }
 
 document.getElementById("btnVerTodasCitas").addEventListener("click", () => {
   filtroFechaCitas.value = "";
   renderDiasBarbero();
   renderListaCitas();
+  renderHabilitarDiaWrap();
 });
 
 const fechaConsulta = document.getElementById("fechaConsulta");
@@ -1773,18 +1977,17 @@ fechaConsulta.addEventListener("change", () => {
   if(!dateStr) return;
 
   const blocked = isBlocked(dateStr);
-  const day = dateFromStr(dateStr).getDay();
-  const martesCerrado = (day === 2) && !esMartesAbierto(dateStr);
-  if(blocked || martesCerrado){
+  const cerradoDefault = cerradoPorDefecto(dateStr) && !estaHabilitado(dateStr);
+  if(blocked || cerradoDefault){
     availClosed.style.display = "block";
     availClosed.textContent = blocked
       ? `Día bloqueado${blocked.reason ? " — " + blocked.reason : ""}.`
-      : "Martes cerrado (sin excepción abierta).";
+      : `Cerrado (${motivoCerrado(dateStr)}), sin habilitar.`;
     return;
   }
 
   const all = generateSlots(dateStr);
-  const taken = CITAS.filter(a => a.date === dateStr).length;
+  const taken = CITAS.filter(a => a.date === dateStr && a.status !== "cancelada").length;
   const horasBloqueadas = HORAS_BLOQUEADAS.filter(h => h.date === dateStr).length;
   const ocupados = taken + horasBloqueadas;
   document.getElementById("availTotal").textContent = all.length;
@@ -1864,61 +2067,63 @@ function renderBloqueos(){
   });
 }
 
-/* --- Martes especiales --- */
-const martesFecha = document.getElementById("martesFecha");
-martesFecha.min = todayStr();
+/* --- Días habilitados (martes puntuales + festivos) --- */
+const habilitarFecha = document.getElementById("habilitarFecha");
+habilitarFecha.min = todayStr();
 
-document.getElementById("btnAbrirMartes").addEventListener("click", () => {
-  const dateStr = martesFecha.value;
+document.getElementById("btnHabilitarDia").addEventListener("click", () => {
+  const dateStr = habilitarFecha.value;
   if(!dateStr){ alert("Selecciona una fecha."); return; }
-  if(dateFromStr(dateStr).getDay() !== 2){ alert("Esa fecha no es martes. Elige un martes."); return; }
-  if(esMartesAbierto(dateStr)){ alert("Ese martes ya está abierto."); return; }
+  if(!cerradoPorDefecto(dateStr)){ alert("Esa fecha no está cerrada por defecto (no es martes ni festivo) — no necesita habilitarse."); return; }
+  if(estaHabilitado(dateStr)){ alert("Ese día ya está habilitado."); return; }
 
-  const btn = document.getElementById("btnAbrirMartes");
+  const nombre = esFestivo(dateStr) ? nombreFestivo(dateStr) : "";
+  const btn = document.getElementById("btnHabilitarDia");
   btn.disabled = true;
-  btn.textContent = "Abriendo…";
+  btn.textContent = "Habilitando…";
 
-  setDoc(doc(db, "martesEspeciales", dateStr), { date: dateStr })
+  setDoc(doc(db, "diasHabilitados", dateStr), { date: dateStr, nombre })
     .then(() => {
       btn.disabled = false;
-      btn.textContent = "Abrir este martes";
-      martesFecha.value = "";
-      apiPost("abrirMartesEspecial", { date: dateStr }).catch(() => {});
+      btn.textContent = "Habilitar este día";
+      habilitarFecha.value = "";
+      apiPost("habilitarDia", { date: dateStr, nombre }).catch(() => {});
     })
     .catch(() => {
       btn.disabled = false;
-      btn.textContent = "Abrir este martes";
+      btn.textContent = "Habilitar este día";
       alert("No se pudo conectar. Intenta de nuevo.");
     });
 });
 
-function renderMartes(){
-  const list = [...MARTES_ESPECIALES].sort((a,b) => a.date.localeCompare(b.date));
-  const wrap = document.getElementById("listaMartes");
+function renderDiasHabilitados(){
+  const list = [...DIAS_HABILITADOS].sort((a,b) => a.date.localeCompare(b.date));
+  const wrap = document.getElementById("listaHabilitados");
   wrap.innerHTML = "";
 
   if(list.length === 0){
-    wrap.innerHTML = '<div class="empty">No hay martes especiales abiertos.</div>';
+    wrap.innerHTML = '<div class="empty">No hay días habilitados por ahora.</div>';
     return;
   }
 
   list.forEach(m => {
     const item = document.createElement("div");
     item.className = "blocked-item";
+    const motivo = m.nombre ? `Festivo: ${m.nombre}` : "Martes — horario de lunes/miércoles";
     item.innerHTML = `
       <div>
         <div class="d">${prettyDate(m.date)}</div>
-        <div class="m">Horario de lunes/miércoles</div>
+        <div class="m">${escapeHtml(motivo)}</div>
       </div>
     `;
     const unBtn = document.createElement("button");
     unBtn.className = "danger";
-    unBtn.textContent = "Cerrar este martes";
+    unBtn.textContent = "Cerrar de nuevo";
     unBtn.addEventListener("click", () => {
       unBtn.disabled = true;
-      deleteDoc(doc(db, "martesEspeciales", m.date))
+      deleteDoc(doc(db, "diasHabilitados", m.date))
         .then(() => {
-          apiPost("cerrarMartesEspecial", { date: m.date }).catch(() => {});
+          apiPost("deshabilitarDia", { date: m.date }).catch(() => {});
         })
         .catch(() => { alert("No se pudo cerrar. Intenta de nuevo."); unBtn.disabled = false; });
     });
@@ -2051,13 +2256,16 @@ historialFecha.addEventListener("change", () => {
 
   dayAppts.forEach(a => {
     const status = getStatus(a);
+    const precio = a.service && a.service.price ? ` ($${Number(a.service.price).toLocaleString("es-CO")})` : "";
     const item = document.createElement("div");
     item.className = "appt-item";
     item.innerHTML = `
-      <div class="info"><b>${escapeHtml(a.name)}</b><span>${escapeHtml(a.phone)} · ${escapeHtml(serviceLabel(a))}</span></div>
-      <div class="right">
-        <div class="when">${a.time}</div>
-        <span class="badge ${status}">${status === "realizada" ? "Realizada" : status === "retrasada" ? "Retrasada" : "Pendiente"}</span>
+      <div class="info">
+        <div class="top"><b>${escapeHtml(a.time)} – ${escapeHtml(a.name)}</b><span class="badge ${status}">${badgeLabel(status)}</span></div>
+        <div class="meta">
+          <span>✂ ${escapeHtml(serviceLabel(a))}${precio}</span>
+          <span>📞 ${escapeHtml(a.phone)}</span>
+        </div>
       </div>
     `;
     wrap.appendChild(item);
